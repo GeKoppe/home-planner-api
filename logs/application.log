@@ -1,0 +1,163 @@
+2025-12-20 10:54:21.789 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - Starting HomeplannerApiApplication using Java 21.0.9 with PID 598377 (/home/gkoppe/dev/life-doc-api/homeplanner-api/build/classes/java/main started by gkoppe in /home/gkoppe/dev/life-doc-api/homeplanner-api)
+2025-12-20 10:54:21.799 [restartedMain] DEBUG o.k.h.homeplanner_api.HomeplannerApiApplication - Running with Spring Boot v4.0.1, Spring v7.0.2
+2025-12-20 10:54:21.800 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-20 10:54:21.959 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-20 10:54:22.006 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2025-12-20 10:54:24.095 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-20 10:54:24.446 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 310 ms. Found 2 JPA repository interfaces.
+2025-12-20 10:54:26.171 [restartedMain] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2025-12-20 10:54:26.336 [restartedMain] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.0.Final
+2025-12-20 10:54:27.519 [restartedMain] INFO  o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-20 10:54:27.585 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-20 10:54:27.752 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@53dc9186
+2025-12-20 10:54:27.754 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-20 10:54:27.810 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-20 10:54:27.851 [restartedMain] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:9090/home-planner]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 16.11
+	Default catalog/schema: home-planner/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-12-20 10:54:28.139 [restartedMain] ERROR o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Failed to initialize JPA EntityManagerFactory: Property 'org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Session.user' is a '@ManyToOne' association and may not use '@Column' to specify column mappings (use '@JoinColumn' instead)
+2025-12-20 10:54:28.140 [restartedMain] WARN  o.s.b.w.s.r.c.AnnotationConfigReactiveWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Property 'org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Session.user' is a '@ManyToOne' association and may not use '@Column' to specify column mappings (use '@JoinColumn' instead)
+2025-12-20 10:54:28.143 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-20 10:54:28.164 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-20 10:54:28.174 [restartedMain] INFO  o.s.b.a.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-20 10:54:28.202 [restartedMain] ERROR org.springframework.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Property 'org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Session.user' is a '@ManyToOne' association and may not use '@Column' to specify column mappings (use '@JoinColumn' instead)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1817)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:976)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:620)
+	at org.springframework.boot.web.server.reactive.context.ReactiveWebServerApplicationContext.refresh(ReactiveWebServerApplicationContext.java:69)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at org.koppe.homeplanner.homeplanner_api.HomeplannerApiApplication.main(HomeplannerApiApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:52)
+Caused by: org.hibernate.AnnotationException: Property 'org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Session.user' is a '@ManyToOne' association and may not use '@Column' to specify column mappings (use '@JoinColumn' instead)
+	at org.hibernate.boot.model.internal.ToOneBinder.bindManyToOne(ToOneBinder.java:87)
+	at org.hibernate.boot.model.internal.PropertyBinder.bindProperty(PropertyBinder.java:860)
+	at org.hibernate.boot.model.internal.PropertyBinder.buildProperty(PropertyBinder.java:792)
+	at org.hibernate.boot.model.internal.PropertyBinder.processElementAnnotations(PropertyBinder.java:719)
+	at org.hibernate.boot.model.internal.EntityBinder.processIdPropertiesIfNotAlready(EntityBinder.java:1072)
+	at org.hibernate.boot.model.internal.EntityBinder.handleIdentifier(EntityBinder.java:380)
+	at org.hibernate.boot.model.internal.EntityBinder.bindEntityClass(EntityBinder.java:217)
+	at org.hibernate.boot.model.internal.AnnotationBinder.bindClass(AnnotationBinder.java:247)
+	at org.hibernate.boot.model.source.internal.annotations.AnnotationMetadataSourceProcessorImpl.processEntityHierarchies(AnnotationMetadataSourceProcessorImpl.java:190)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess$1.processEntityHierarchies(MetadataBuildingProcess.java:291)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.coordinateProcessors(MetadataBuildingProcess.java:325)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:199)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1392)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.populateSessionFactoryBuilder(EntityManagerFactoryBuilderImpl.java:1472)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:433)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:416)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:409)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1864)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1813)
+	... 18 common frames omitted
+2025-12-20 10:55:16.599 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - Starting HomeplannerApiApplication using Java 21.0.9 with PID 599461 (/home/gkoppe/dev/life-doc-api/homeplanner-api/build/classes/java/main started by gkoppe in /home/gkoppe/dev/life-doc-api/homeplanner-api)
+2025-12-20 10:55:16.611 [restartedMain] DEBUG o.k.h.homeplanner_api.HomeplannerApiApplication - Running with Spring Boot v4.0.1, Spring v7.0.2
+2025-12-20 10:55:16.613 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-20 10:55:16.796 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-20 10:55:16.977 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2025-12-20 10:55:18.703 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-20 10:55:18.965 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 242 ms. Found 2 JPA repository interfaces.
+2025-12-20 10:55:20.014 [restartedMain] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2025-12-20 10:55:20.131 [restartedMain] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.0.Final
+2025-12-20 10:55:20.939 [restartedMain] INFO  o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-20 10:55:20.993 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-20 10:55:21.200 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@38cf4d9c
+2025-12-20 10:55:21.203 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-20 10:55:21.259 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-20 10:55:21.303 [restartedMain] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:9090/home-planner]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 16.11
+	Default catalog/schema: home-planner/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-12-20 10:55:22.690 [restartedMain] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-20 10:55:22.834 [restartedMain] WARN  org.hibernate.orm.jdbc.warn - HHH000247: ErrorCode: 0, SQLState: 00000
+2025-12-20 10:55:22.834 [restartedMain] WARN  org.hibernate.orm.jdbc.warn - constraint "uk36uexkiww6jkyqnxwjl5a9mmy" of relation "activity_types" does not exist, skipping
+2025-12-20 10:55:22.862 [restartedMain] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-20 10:55:23.021 [restartedMain] INFO  o.s.d.jpa.repository.query.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-12-20 10:55:23.467 [restartedMain] INFO  o.s.b.s.a.ReactiveUserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 54384d1c-51ec-46f7-80a5-6c6a46a84ede
+
+2025-12-20 10:55:24.017 [restartedMain] DEBUG o.s.w.r.r.m.a.RequestMappingHandlerMapping - 3 mappings in 'requestMappingHandlerMapping'
+2025-12-20 10:55:24.049 [restartedMain] DEBUG o.s.web.reactive.handler.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-12-20 10:55:24.114 [restartedMain] DEBUG o.s.w.r.r.m.annotation.ControllerMethodResolver - ControllerAdvice beans: none
+2025-12-20 10:55:24.178 [restartedMain] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - enableLoggingRequestDetails='false': form data and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-12-20 10:55:24.577 [restartedMain] INFO  o.s.boot.reactor.netty.NettyWebServer - Netty started on port 6666 (http)
+2025-12-20 10:55:24.593 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - Started HomeplannerApiApplication in 9.36 seconds (process running for 10.382)
+2025-12-20 10:55:54.355 [reactor-http-epoll-3] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - [7a9716ca-1] HTTP POST "/api/v1/sessions/login"
+2025-12-20 10:55:54.392 [parallel-1] DEBUG o.s.web.server.session.DefaultWebSessionManager - Created new WebSession.
+2025-12-20 10:55:54.409 [parallel-1] DEBUG o.s.web.reactive.handler.SimpleUrlHandlerMapping - [7a9716ca-1] Mapped to ResourceWebHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/]]
+2025-12-20 10:55:54.413 [parallel-1] DEBUG o.s.web.reactive.resource.ResourceWebHandler - [7a9716ca-1] Resource not found
+2025-12-20 10:55:54.438 [parallel-1] DEBUG org.springframework.web.HttpLogging - [7a9716ca-1] Resolved [NoResourceFoundException: 404 NOT_FOUND "No static resource api/v1/sessions/login for request 'http://localhost:6666/api/v1/sessions/login'."] for HTTP POST /api/v1/sessions/login
+2025-12-20 10:55:54.483 [parallel-1] DEBUG org.springframework.web.HttpLogging - [7a9716ca-1] Encoding [{timestamp=Sat Dec 20 10:55:54 CET 2025, path=/api/v1/sessions/login, status=404, error=Not Found, r (truncated)...]
+2025-12-20 10:55:54.518 [parallel-1] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - [7a9716ca-1] Completed 404 NOT_FOUND
+2025-12-20 10:56:07.579 [reactor-http-epoll-3] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - [7a9716ca-2] HTTP POST "/api/v1/session/login"
+2025-12-20 10:56:07.580 [parallel-2] DEBUG o.s.web.server.session.DefaultWebSessionManager - Created new WebSession.
+2025-12-20 10:56:07.582 [parallel-2] DEBUG o.s.w.r.r.m.a.RequestMappingHandlerMapping - [7a9716ca-2] Mapped to org.koppe.homeplanner.homeplanner_api.web.controller.SessionController#login(Mono)
+2025-12-20 10:56:07.600 [parallel-2] DEBUG o.s.w.r.r.m.a.RequestBodyMethodArgumentResolver - [7a9716ca-2] Content-Type:application/json
+2025-12-20 10:56:07.601 [parallel-2] DEBUG o.s.w.r.r.m.a.RequestBodyMethodArgumentResolver - [7a9716ca-2] 0..1 [org.koppe.homeplanner.homeplanner_api.web.dto.UserDto]
+2025-12-20 10:56:07.677 [reactor-http-epoll-3] DEBUG org.springframework.web.HttpLogging - [7a9716ca-2] Decoded [org.koppe.homeplanner.homeplanner_api.web.dto.UserDto@3f2e3fa7]
+2025-12-20 10:56:08.378 [reactor-http-epoll-3] DEBUG o.k.h.homeplanner_api.jpa.service.SessionService - Creating session for user Test2
+2025-12-20 10:56:08.432 [reactor-http-epoll-3] DEBUG o.s.w.r.r.m.annotation.ResponseEntityResultHandler - [7a9716ca-2] Using 'application/json' given [*/*] and supported [application/json]
+2025-12-20 10:56:08.432 [reactor-http-epoll-3] DEBUG o.s.w.r.r.m.annotation.ResponseEntityResultHandler - [7a9716ca-2] 0..1 [org.koppe.homeplanner.homeplanner_api.web.dto.SessionDto]
+2025-12-20 10:56:08.433 [reactor-http-epoll-3] DEBUG org.springframework.web.HttpLogging - [7a9716ca-2] Encoding [org.koppe.homeplanner.homeplanner_api.web.dto.SessionDto@3a365fe5]
+2025-12-20 10:56:08.443 [reactor-http-epoll-3] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - [7a9716ca-2] Completed 200 OK
+2025-12-20 10:56:35.220 [reactor-http-epoll-3] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - [7a9716ca-3] HTTP POST "/api/v1/session/login"
+2025-12-20 10:56:35.222 [parallel-3] DEBUG o.s.web.server.session.DefaultWebSessionManager - Created new WebSession.
+2025-12-20 10:56:35.223 [parallel-3] DEBUG o.s.w.r.r.m.a.RequestMappingHandlerMapping - [7a9716ca-3] Mapped to org.koppe.homeplanner.homeplanner_api.web.controller.SessionController#login(Mono)
+2025-12-20 10:56:35.223 [parallel-3] DEBUG o.s.w.r.r.m.a.RequestBodyMethodArgumentResolver - [7a9716ca-3] Content-Type:application/json
+2025-12-20 10:56:35.223 [parallel-3] DEBUG o.s.w.r.r.m.a.RequestBodyMethodArgumentResolver - [7a9716ca-3] 0..1 [org.koppe.homeplanner.homeplanner_api.web.dto.UserDto]
+2025-12-20 10:56:35.224 [reactor-http-epoll-3] DEBUG org.springframework.web.HttpLogging - [7a9716ca-3] Decoded [org.koppe.homeplanner.homeplanner_api.web.dto.UserDto@354dbf4e]
+2025-12-20 10:56:35.494 [reactor-http-epoll-3] DEBUG o.s.w.r.r.m.annotation.ResponseEntityResultHandler - [7a9716ca-3] Using 'application/json' given [*/*] and supported [application/json]
+2025-12-20 10:56:35.494 [reactor-http-epoll-3] DEBUG o.s.w.r.r.m.annotation.ResponseEntityResultHandler - [7a9716ca-3] 0..1 [org.koppe.homeplanner.homeplanner_api.web.dto.SessionDto]
+2025-12-20 10:56:35.497 [reactor-http-epoll-3] DEBUG org.springframework.web.HttpLogging - [7a9716ca-3] Encoding [ProblemDetail[type='null', title='Unauthorized', status=401, detail='Username and password don't mat (truncated)...]
+2025-12-20 10:56:35.507 [reactor-http-epoll-3] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - [7a9716ca-3] Completed 401 UNAUTHORIZED
+2025-12-20 10:57:11.979 [reactor-http-epoll-3] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - [7a9716ca-4] HTTP POST "/api/v1/session/login"
+2025-12-20 10:57:11.980 [parallel-4] DEBUG o.s.web.server.session.DefaultWebSessionManager - Created new WebSession.
+2025-12-20 10:57:11.981 [parallel-4] DEBUG o.s.w.r.r.m.a.RequestMappingHandlerMapping - [7a9716ca-4] Mapped to org.koppe.homeplanner.homeplanner_api.web.controller.SessionController#login(Mono)
+2025-12-20 10:57:11.982 [parallel-4] DEBUG o.s.w.r.r.m.a.RequestBodyMethodArgumentResolver - [7a9716ca-4] Content-Type:application/json
+2025-12-20 10:57:11.982 [parallel-4] DEBUG o.s.w.r.r.m.a.RequestBodyMethodArgumentResolver - [7a9716ca-4] 0..1 [org.koppe.homeplanner.homeplanner_api.web.dto.UserDto]
+2025-12-20 10:57:11.983 [reactor-http-epoll-3] DEBUG org.springframework.web.HttpLogging - [7a9716ca-4] Decoded [org.koppe.homeplanner.homeplanner_api.web.dto.UserDto@451f9461]
+2025-12-20 10:57:12.260 [reactor-http-epoll-3] DEBUG o.k.h.homeplanner_api.jpa.service.SessionService - Creating session for user Test2
+2025-12-20 10:57:12.269 [reactor-http-epoll-3] DEBUG o.s.w.r.r.m.annotation.ResponseEntityResultHandler - [7a9716ca-4] Using 'application/json' given [*/*] and supported [application/json]
+2025-12-20 10:57:12.269 [reactor-http-epoll-3] DEBUG o.s.w.r.r.m.annotation.ResponseEntityResultHandler - [7a9716ca-4] 0..1 [org.koppe.homeplanner.homeplanner_api.web.dto.SessionDto]
+2025-12-20 10:57:12.270 [reactor-http-epoll-3] DEBUG org.springframework.web.HttpLogging - [7a9716ca-4] Encoding [org.koppe.homeplanner.homeplanner_api.web.dto.SessionDto@437af27e]
+2025-12-20 10:57:12.274 [reactor-http-epoll-3] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - [7a9716ca-4] Completed 200 OK
+2025-12-20 10:57:36.768 [SpringApplicationShutdownHook] INFO  o.s.boot.reactor.netty.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-20 10:57:36.772 [netty-shutdown] INFO  o.s.boot.reactor.netty.GracefulShutdown - Graceful shutdown complete
+2025-12-20 10:57:36.787 [SpringApplicationShutdownHook] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-20 10:57:36.792 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-20 10:57:36.796 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

@@ -1,0 +1,94 @@
+2025-12-19 21:48:02.949 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - Starting HomeplannerApiApplication using Java 21.0.9 with PID 72157 (/home/gkoppe/dev/life-doc-api/homeplanner-api/build/classes/java/main started by gkoppe in /home/gkoppe/dev/life-doc-api/homeplanner-api)
+2025-12-19 21:48:02.953 [restartedMain] DEBUG o.k.h.homeplanner_api.HomeplannerApiApplication - Running with Spring Boot v4.0.1, Spring v7.0.2
+2025-12-19 21:48:02.957 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-19 21:48:03.034 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-19 21:48:03.112 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2025-12-19 21:48:03.961 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-19 21:48:04.126 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 151 ms. Found 1 JPA repository interface.
+2025-12-19 21:48:04.874 [restartedMain] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2025-12-19 21:48:04.957 [restartedMain] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.0.Final
+2025-12-19 21:48:05.515 [restartedMain] INFO  o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-19 21:48:05.569 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-19 21:48:05.691 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@40e39828
+2025-12-19 21:48:05.692 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-19 21:48:05.727 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-19 21:48:05.751 [restartedMain] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:9090/home-planner]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 16.11
+	Default catalog/schema: home-planner/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-12-19 21:48:06.860 [restartedMain] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-19 21:48:06.984 [restartedMain] WARN  org.hibernate.orm.jdbc.warn - HHH000247: ErrorCode: 0, SQLState: 00000
+2025-12-19 21:48:06.984 [restartedMain] WARN  org.hibernate.orm.jdbc.warn - constraint "uk5wuw0l1c8guktttfs0ta0g76n" of relation "activities" does not exist, skipping
+2025-12-19 21:48:06.995 [restartedMain] WARN  org.hibernate.orm.jdbc.warn - HHH000247: ErrorCode: 0, SQLState: 00000
+2025-12-19 21:48:06.996 [restartedMain] WARN  org.hibernate.orm.jdbc.warn - constraint "ukmgrg0oxb338i6vo7bt43koe2a" of relation "activities_properties" does not exist, skipping
+2025-12-19 21:48:07.028 [restartedMain] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-19 21:48:07.147 [restartedMain] INFO  o.s.d.jpa.repository.query.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-12-19 21:48:07.408 [restartedMain] INFO  o.s.b.s.a.ReactiveUserDetailsServiceAutoConfiguration - 
+
+Using generated security password: b7c4cea5-135c-4f83-87f2-b2af2a709060
+
+2025-12-19 21:48:07.816 [restartedMain] DEBUG o.s.w.r.r.m.a.RequestMappingHandlerMapping - 2 mappings in 'requestMappingHandlerMapping'
+2025-12-19 21:48:07.841 [restartedMain] DEBUG o.s.web.reactive.handler.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-12-19 21:48:07.903 [restartedMain] DEBUG o.s.w.r.r.m.annotation.ControllerMethodResolver - ControllerAdvice beans: none
+2025-12-19 21:48:07.953 [restartedMain] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - enableLoggingRequestDetails='false': form data and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-12-19 21:48:08.268 [restartedMain] INFO  o.s.boot.reactor.netty.NettyWebServer - Netty started on port 6666 (http)
+2025-12-19 21:48:08.278 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - Started HomeplannerApiApplication in 6.158 seconds (process running for 6.898)
+2025-12-19 21:48:08.282 [SpringApplicationShutdownHook] INFO  o.s.boot.reactor.netty.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-19 21:48:08.289 [netty-shutdown] INFO  o.s.boot.reactor.netty.GracefulShutdown - Graceful shutdown complete
+2025-12-19 21:48:08.311 [SpringApplicationShutdownHook] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-19 21:48:08.316 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-19 21:48:08.326 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-19 21:50:01.197 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - Starting HomeplannerApiApplication using Java 21.0.9 with PID 73975 (/home/gkoppe/dev/life-doc-api/homeplanner-api/build/classes/java/main started by gkoppe in /home/gkoppe/dev/life-doc-api/homeplanner-api)
+2025-12-19 21:50:01.200 [restartedMain] DEBUG o.k.h.homeplanner_api.HomeplannerApiApplication - Running with Spring Boot v4.0.1, Spring v7.0.2
+2025-12-19 21:50:01.202 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-19 21:50:01.290 [restartedMain] INFO  o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-19 21:50:01.377 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2025-12-19 21:50:02.227 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-19 21:50:02.389 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 152 ms. Found 1 JPA repository interface.
+2025-12-19 21:50:03.154 [restartedMain] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2025-12-19 21:50:03.232 [restartedMain] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.0.Final
+2025-12-19 21:50:03.802 [restartedMain] INFO  o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-19 21:50:03.849 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-19 21:50:03.986 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@23a3e7cf
+2025-12-19 21:50:03.988 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-19 21:50:04.031 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-19 21:50:04.070 [restartedMain] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:9090/home-planner]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 16.11
+	Default catalog/schema: home-planner/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-12-19 21:50:05.018 [restartedMain] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-19 21:50:05.113 [restartedMain] WARN  org.hibernate.orm.jdbc.warn - HHH000247: ErrorCode: 0, SQLState: 00000
+2025-12-19 21:50:05.113 [restartedMain] WARN  org.hibernate.orm.jdbc.warn - constraint "uk5wuw0l1c8guktttfs0ta0g76n" of relation "activities" does not exist, skipping
+2025-12-19 21:50:05.130 [restartedMain] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-19 21:50:05.236 [restartedMain] INFO  o.s.d.jpa.repository.query.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-12-19 21:50:05.495 [restartedMain] INFO  o.s.b.s.a.ReactiveUserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 455a66bf-0059-4a26-aba4-4350989d9c8b
+
+2025-12-19 21:50:05.964 [restartedMain] DEBUG o.s.w.r.r.m.a.RequestMappingHandlerMapping - 2 mappings in 'requestMappingHandlerMapping'
+2025-12-19 21:50:05.989 [restartedMain] DEBUG o.s.web.reactive.handler.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-12-19 21:50:06.052 [restartedMain] DEBUG o.s.w.r.r.m.annotation.ControllerMethodResolver - ControllerAdvice beans: none
+2025-12-19 21:50:06.117 [restartedMain] DEBUG o.s.web.server.adapter.HttpWebHandlerAdapter - enableLoggingRequestDetails='false': form data and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-12-19 21:50:06.501 [restartedMain] INFO  o.s.boot.reactor.netty.NettyWebServer - Netty started on port 6666 (http)
+2025-12-19 21:50:06.514 [restartedMain] INFO  o.k.h.homeplanner_api.HomeplannerApiApplication - Started HomeplannerApiApplication in 6.131 seconds (process running for 6.824)
+2025-12-19 21:51:17.307 [SpringApplicationShutdownHook] INFO  o.s.boot.reactor.netty.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-19 21:51:17.311 [netty-shutdown] INFO  o.s.boot.reactor.netty.GracefulShutdown - Graceful shutdown complete
+2025-12-19 21:51:17.326 [SpringApplicationShutdownHook] INFO  o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-19 21:51:17.330 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-19 21:51:17.334 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
