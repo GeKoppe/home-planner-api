@@ -1,5 +1,5 @@
 server:
-  port: 6666
+  port: 9093
 spring:
   datasource:
     url: jdbc:postgresql://localhost:9090/home-planner
@@ -15,3 +15,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true

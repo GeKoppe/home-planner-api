@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 
@@ -53,5 +54,35 @@ public class UserService {
             throw new IllegalArgumentException();
         }
         return PasswordEncryption.matches(u.getPassword(), userList.get(0).getPwHash());
+    }
+
+    public boolean userExists(Long id) throws IllegalArgumentException {
+        if (id == null) {
+            logger.info("No id given");
+            throw new IllegalArgumentException();
+        }
+        return users.existsById(id);
+    }
+
+    @Transactional
+    public User deleteUser(Long id) throws IllegalArgumentException{
+        if (id == null) {
+            logger.info("No id given");
+            throw new IllegalArgumentException();
+        }
+
+        Optional<User> u = users.findById(id);
+        if (u.isEmpty()) {
+            logger.info("User with id {} does not exist", id);
+            throw new IllegalArgumentException();
+        }
+        
+        User user = u.get();
+        if (user == null) {
+            throw new IllegalArgumentException();
+        }
+
+        users.delete(user);
+        return user;
     }
 }

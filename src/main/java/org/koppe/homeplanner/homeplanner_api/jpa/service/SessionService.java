@@ -13,10 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 
+/**
+ * Service for dealing with sessions in the database
+ */
 @Service
 @AllArgsConstructor
 public class SessionService {
@@ -31,6 +35,18 @@ public class SessionService {
      */
     private UserRepository users;
 
+    /**
+     * Entity manager for hibernate context
+     */
+    private EntityManager em;
+
+    /**
+     * Creates a session for user with given id, if the user id exists.
+     * 
+     * @param userId User id for which to create the session
+     * @return Created session
+     * @throws IllegalArgumentException If the user id does not exist
+     */
     @Transactional
     public Session createSession(@NotNull Long userId) throws IllegalArgumentException {
         Optional<User> u = users.findById(userId);
@@ -43,6 +59,7 @@ public class SessionService {
         return create(user);
     }
 
+    @Transactional
     public Session createSession(@NotNull String userName) throws IllegalArgumentException {
         List<User> u = users.findByName(userName);
         if (u.size() == 0) {
@@ -53,6 +70,13 @@ public class SessionService {
         return create(u.get(0));
     }
 
+    /**
+     * Creates session for given user
+     * 
+     * @param user User for which to create a new session
+     * @return Created session
+     */
+    @Transactional
     private Session create(@NotNull User user) {
         logger.debug("Creating session for user {}", user.getName());
 
@@ -60,6 +84,23 @@ public class SessionService {
         LocalDateTime expiration = LocalDateTime.now().plusMinutes(10L);
         Session session = new Session(guid, user, expiration);
 
+        return sessions.save(session);
+    }
+
+    /**
+     * Finds session by guid
+     * 
+     * @param guid Guid of the session
+     * @return Found session
+     */
+    public Optional<Session> findById(String guid) {
+        return sessions.findById(guid);
+    }
+
+    @Transactional
+    public Session refreshSession(Session session) {
+        LocalDateTime expiration = LocalDateTime.now().plusMinutes(10L);
+        session.setExpiration(expiration);
         return sessions.save(session);
     }
 }
