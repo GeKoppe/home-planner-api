@@ -14,26 +14,38 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "activity_properties")
+@Table(name = "activity_property_types")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActivityProperty {
-    
+public class ActivityPropertyType {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "activity_id", nullable = false)
-    private Activity activity;
+    @Column(name = "name")
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "property_type_id", nullable = false)
-    private ActivityPropertyType propertyType;
+    @JoinColumn(name = "activity_type_id", nullable = false)
+    private ActivityType activity;
 
-    @Column(name = "value", nullable = false)
-    private String value;
+    @Column(name = "type", nullable = false)
+    private TypeC type;
+
+    @Column(name = "timeable", nullable = false)
+    private Boolean timeable;
+
+    @AllArgsConstructor
+    @Getter
+    public static enum TypeC {
+        STRING("string"),
+        INTEGER("int"),
+        DATE("date"),
+        BOOLEAN("boolean");
+
+        String value;
+    }
 }

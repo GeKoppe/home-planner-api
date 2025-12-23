@@ -29,16 +29,30 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Mono;
 
+/**
+ * Controller for user management
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
 @Tag(name = "User Management", description = "Provides functionality for managing users within the application")
 public class UserController {
-
+    /**
+     * Database service for interacting with users
+     */
     private final UserService userService;
 
+    /**
+     * Logger
+     */
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    /**
+     * API operation for retrieving users
+     * 
+     * @param id ID of the user
+     * @return User object
+     */
     @Operation(summary = "Get user", description = "Returns information for user with given id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
@@ -56,6 +70,12 @@ public class UserController {
         });
     }
 
+    /**
+     * API operation for creating a new user
+     * 
+     * @param user User to create
+     * @return Created user
+     */
     @Operation(summary = "Create new user", description = "Creates user with given information within the application")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully created", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
@@ -78,6 +98,12 @@ public class UserController {
         });
     }
 
+    /**
+     * API operation for deleting a user
+     * 
+     * @param id ID of the user to be deleted
+     * @return Deleted user
+     */
     @Operation(summary = "Delete a user", description = "Deletes the user with given id irreversibly")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User deleted successfully", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),

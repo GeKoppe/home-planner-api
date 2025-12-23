@@ -19,7 +19,13 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class UserService {
+    /**
+     * Logger
+     */
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
+    /**
+     * Database repository for interacting with users
+     */
     private UserRepository users;
 
     /**
@@ -32,6 +38,15 @@ public class UserService {
         return users.findById(id);
     }
 
+    /**
+     * Creates a user with given username and password: Password will only be saved
+     * hashed
+     * 
+     * @param name     Name of the new user
+     * @param password Password of the new user
+     * @return Created user
+     */
+    @Transactional
     public User createUser(@NotNull String name, @NotNull String password) {
         User user = new User();
         user.setName(name);
@@ -39,7 +54,19 @@ public class UserService {
         return createUser(user);
     }
 
-    public User createUser(User user) {
+    /**
+     * Creates new user in the database
+     * 
+     * @param user User to create
+     * @return Created user
+     * @throws IllegalArgumentException if no User is given
+     */
+    @Transactional
+    public User createUser(User user) throws IllegalArgumentException {
+        if (user == null) {
+            logger.info("No user argument given");
+            throw new IllegalArgumentException();
+        }
         return users.save(user);
     }
 
@@ -65,7 +92,7 @@ public class UserService {
     }
 
     @Transactional
-    public User deleteUser(Long id) throws IllegalArgumentException{
+    public User deleteUser(Long id) throws IllegalArgumentException {
         if (id == null) {
             logger.info("No id given");
             throw new IllegalArgumentException();
@@ -76,7 +103,7 @@ public class UserService {
             logger.info("User with id {} does not exist", id);
             throw new IllegalArgumentException();
         }
-        
+
         User user = u.get();
         if (user == null) {
             throw new IllegalArgumentException();
