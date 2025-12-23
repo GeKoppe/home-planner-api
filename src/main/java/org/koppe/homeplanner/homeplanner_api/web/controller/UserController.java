@@ -34,7 +34,7 @@ import reactor.core.publisher.Mono;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/users")
 @Tag(name = "User Management", description = "Provides functionality for managing users within the application")
 public class UserController {
     /**

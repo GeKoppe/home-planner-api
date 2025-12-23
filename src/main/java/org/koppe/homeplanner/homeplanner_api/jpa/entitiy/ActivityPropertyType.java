@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "activity_property_types")
@@ -19,6 +20,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class ActivityPropertyType {
     @Id
     @Column(name = "id", nullable = false)
@@ -33,19 +35,5 @@ public class ActivityPropertyType {
     private ActivityType activity;
 
     @Column(name = "type", nullable = false)
-    private TypeC type;
-
-    @Column(name = "timeable", nullable = false)
-    private Boolean timeable;
-
-    @AllArgsConstructor
-    @Getter
-    public static enum TypeC {
-        STRING("string"),
-        INTEGER("int"),
-        DATE("date"),
-        BOOLEAN("boolean");
-
-        String value;
-    }
+    private PropertyTypeC type;
 }

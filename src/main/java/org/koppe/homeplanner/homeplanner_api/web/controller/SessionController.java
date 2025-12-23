@@ -27,7 +27,7 @@ import lombok.AllArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/v1/session")
+@RequestMapping("/session")
 @AllArgsConstructor
 @Tag(name = "Session management", description = "Manages sessions within the application. Allows login and logout.")
 public class SessionController {

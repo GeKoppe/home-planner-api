@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "activity_types")
@@ -22,6 +23,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class ActivityType {
     @Id
     @Column(name = "id", nullable = false)
@@ -33,4 +35,7 @@ public class ActivityType {
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
     private Set<ActivityPropertyType> properties;
+
+    @Column(name = "timeable", nullable = false)
+    private Boolean timeable;
 }

@@ -1,5 +1,8 @@
 package org.koppe.homeplanner.homeplanner_api.jpa.service;
 
+import java.util.Optional;
+
+import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityPropertyType;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityType;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityPropertyRepository;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityPropertyTypeRespository;
@@ -40,6 +43,8 @@ public class ActivityService {
      */
     private ActivityPropertyTypeRespository propTypes;
 
+    //#region Types
+
     /**
      * Returns true if an activity with given name already exists in the database
      * 
@@ -76,5 +81,32 @@ public class ActivityService {
         }
 
         return actTypes.save(type);
+    }
+
+    public Optional<ActivityType> findActivityTypeById(Long id) throws IllegalArgumentException {
+        if (id == null) {
+            logger.info("No activity name given");
+            throw new IllegalArgumentException();
+        }
+        return actTypes.findById(id);
+    }
+
+
+    //#region Type Properties 
+    public boolean activityTypePropertyExistsByNameAndActivityTypeId(String name, Long activityId) throws IllegalArgumentException {
+        if (name == null || name.isBlank() || activityId == null || activityId < 0) {
+            logger.info("No activity property name given");
+            throw new IllegalArgumentException();
+        }
+
+        return propTypes.findAllByNameAndActivity_Id(name, activityId).size() > 0;
+    }
+
+    @Transactional
+    public ActivityPropertyType createActivityPropertyType(ActivityPropertyType prop) throws IllegalArgumentException {
+        if (prop == null) {
+            throw new IllegalArgumentException();
+        }
+        return propTypes.save(prop);
     }
 }
