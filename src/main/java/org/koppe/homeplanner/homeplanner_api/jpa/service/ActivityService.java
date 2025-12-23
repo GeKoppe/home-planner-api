@@ -2,6 +2,7 @@ package org.koppe.homeplanner.homeplanner_api.jpa.service;
 
 import java.util.Optional;
 
+import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityPropertyType;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityType;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityPropertyRepository;
@@ -11,8 +12,8 @@ import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityTypeReposito
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -43,7 +44,7 @@ public class ActivityService {
      */
     private ActivityPropertyTypeRespository propTypes;
 
-    //#region Types
+    // #region Types
 
     /**
      * Returns true if an activity with given name already exists in the database
@@ -60,7 +61,7 @@ public class ActivityService {
         return actTypes.findAllByName(activityName).size() > 0;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ActivityType createActivityType(String name) throws IllegalArgumentException {
         if (name == null || name.isBlank()) {
             logger.info("No activity name given");
@@ -83,17 +84,49 @@ public class ActivityService {
         return actTypes.save(type);
     }
 
-    public Optional<ActivityType> findActivityTypeById(Long id) throws IllegalArgumentException {
+    @Transactional
+    public ActivityType findActivityTypeById(Long id) throws IllegalArgumentException {
         if (id == null) {
-            logger.info("No activity name given");
+            logger.info("No activity id given");
             throw new IllegalArgumentException();
         }
-        return actTypes.findById(id);
+        Optional<ActivityType> typeOpt = actTypes.findById(id);
+        if (typeOpt.isEmpty())
+            return null;
+        ActivityType type = typeOpt.get();
+        type.getProperties().size();
+        return type;
     }
 
+    @Transactional
+    public ActivityType deleteActivityType(Long id) throws IllegalArgumentException {
+        if (id == null) {
+            logger.info("No activity id given");
+            throw new IllegalArgumentException();
+        }
 
-    //#region Type Properties 
-    public boolean activityTypePropertyExistsByNameAndActivityTypeId(String name, Long activityId) throws IllegalArgumentException {
+        Optional<ActivityType> typeOpt = actTypes.findById(id);
+        if (typeOpt.isEmpty())
+            return null;
+
+        ActivityType type = typeOpt.get();
+        type.getProperties().size();
+        actTypes.delete(type);
+        return type;
+    }
+
+    public boolean activityExistsById(Long id) {
+        if (id == null) {
+            logger.info("No activity type id given");
+            throw new IllegalArgumentException();
+        }
+
+        return actTypes.existsById(id);
+    }
+
+    // #region Type Properties
+    public boolean activityTypePropertyExistsByNameAndActivityTypeId(String name, Long activityId)
+            throws IllegalArgumentException {
         if (name == null || name.isBlank() || activityId == null || activityId < 0) {
             logger.info("No activity property name given");
             throw new IllegalArgumentException();
@@ -108,5 +141,25 @@ public class ActivityService {
             throw new IllegalArgumentException();
         }
         return propTypes.save(prop);
+    }
+
+    // #region Activities
+    @Transactional
+    public Activity createActivity(Activity act, Long typeId) {
+        if (act == null || typeId == null) {
+            logger.info("No activity given");
+            throw new IllegalArgumentException();
+        }
+
+        ActivityType type = findActivityTypeById(typeId);
+        if (type == null) {
+            logger.info("No valid activity id given");
+            throw new IllegalArgumentException();
+        }
+
+        act.setType(type);
+        Activity created = activities.save(act);
+        created.getType().getId();
+        return created;
     }
 }

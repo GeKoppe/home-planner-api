@@ -1,13 +1,15 @@
 server:
   port: 9093
-  servlet:
-    context-path: /api/v1
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:9090/home-planner
     username: hp
     password: elo
     driver-class-name: org.postgresql.Driver
+  
+  webflux:
+    base-path: /api/v1
 
   jpa:
     hibernate:

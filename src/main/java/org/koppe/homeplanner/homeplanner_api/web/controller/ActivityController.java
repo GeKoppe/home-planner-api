@@ -1,12 +1,14 @@
 package org.koppe.homeplanner.homeplanner_api.web.controller;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
+import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityPropertyType;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityType;
 import org.koppe.homeplanner.homeplanner_api.jpa.service.ActivityService;
+import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityDto;
 import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityPropertyTypeDto;
 import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityTypeDto;
 import org.slf4j.Logger;
@@ -14,16 +16,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,6 +47,13 @@ public class ActivityController {
      */
     private final ActivityService activities;
 
+    // #region Activity Types
+    /**
+     * Creates new activity type
+     * 
+     * @param activityType
+     * @return
+     */
     @Operation(summary = "Activity type creation", description = "Creates a new activity type with the given parameters")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Created activity successfully", content = @Content(schema = @Schema(implementation = ActivityTypeDto.class))),
@@ -72,6 +82,7 @@ public class ActivityController {
                 ActivityTypeDto dto = new ActivityTypeDto();
                 dto.setId(created.getId());
                 dto.setName(created.getName());
+                dto.setTimable(created.getTimeable());
                 return ResponseEntity.ok(dto);
             });
         });
@@ -92,13 +103,12 @@ public class ActivityController {
                         .build();
             }
 
-            Optional<ActivityType> actOp = activities.findActivityTypeById(id);
-            if (actOp.isEmpty()) {
+            ActivityType type = activities.findActivityTypeById(id);
+            if (type == null) {
                 return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404),
                         "Activity type with given id does not exist")).build();
             }
 
-            ActivityType type = actOp.get();
             ActivityTypeDto dto = new ActivityTypeDto();
             dto.setId(type.getId());
             dto.setName(type.getName());
@@ -113,6 +123,48 @@ public class ActivityController {
         });
     }
 
+    @Operation(summary = "Delete activity types", description = "Deletes activity with provided id and all it's properties")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully deleted activity type", content = @Content(schema = @Schema(implementation = ActivityTypeDto.class))),
+            @ApiResponse(responseCode = "404", description = "Activity type with provided id not found", content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
+    @DeleteMapping(path = "/type/{id}", produces = "application/json")
+    public Mono<ResponseEntity<ActivityTypeDto>> deleteActivityType(@PathVariable Long id) {
+        return Mono.fromCallable(() -> {
+            if (id == null) {
+                return ResponseEntity
+                        .of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), "No activity id given"))
+                        .build();
+            }
+
+            ActivityType type = activities.findActivityTypeById(id);
+            if (type == null) {
+                return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404),
+                        "Activity type with given id does not exist")).build();
+            }
+
+            ActivityType deleted = activities.deleteActivityType(id);
+            if (deleted == null) {
+                return ResponseEntity.of(
+                        ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), "No activity found to delete"))
+                        .build();
+            }
+
+            ActivityTypeDto dto = new ActivityTypeDto();
+            dto.setId(deleted.getId());
+            dto.setName(deleted.getName());
+            dto.setTimable(deleted.getTimeable());
+            Set<ActivityPropertyTypeDto> props = new HashSet<>();
+
+            deleted.getProperties().forEach(
+                    p -> props.add(new ActivityPropertyTypeDto(p.getId(), p.getName(), p.getType(), deleted.getId())));
+
+            dto.setProperties(props);
+            return ResponseEntity.ok(dto);
+        });
+    }
+
+    // #region Activity Type Properties
     @Operation(summary = "Creates new activity property", description = """
             If an activity with the given id exists, the property in the body is created and linked with the activity
             """)
@@ -144,14 +196,12 @@ public class ActivityController {
                 }
 
                 // Check if the activity id exists
-                Optional<ActivityType> actOp = activities.findActivityTypeById(activityTypeId);
-                if (actOp.isEmpty()) {
+                ActivityType act = activities.findActivityTypeById(activityTypeId);
+                if (act == null) {
                     logger.info("No activity type with id {} found", activityTypeId);
                     return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404),
                             "No activity with given id exists")).build();
                 }
-
-                ActivityType act = actOp.get();
                 logger.debug("Creating new property for activity {}", act);
 
                 // Create the property to save in the database
@@ -164,6 +214,47 @@ public class ActivityController {
 
                 ActivityPropertyTypeDto dto = new ActivityPropertyTypeDto(created.getId(), created.getName(),
                         created.getType(), created.getActivity().getId());
+
+                return ResponseEntity.ok(dto);
+            });
+        });
+    }
+
+    // #region Activities
+    @Operation(summary = "Creates an activity", description = "Creates a new activity with the given type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully created the activity", content = @Content(schema = @Schema(implementation = ActivityDto.class))),
+            @ApiResponse(responseCode = "400", description = "Activity type id is missing", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+            @ApiResponse(responseCode = "404", description = "No activity type with provided id exists", content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
+    @PostMapping(produces = "application/json")
+    public Mono<ResponseEntity<ActivityDto>> addActivity(@RequestBody Mono<ActivityDto> activity) {
+        return activity.flatMap(a -> {
+            return Mono.fromCallable(() -> {
+                if (a.getActivityTypeId() == null) {
+                    logger.info("No activity type given");
+                    return ResponseEntity
+                            .of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), "No activity type given"))
+                            .build();
+                }
+
+                if (!activities.activityExistsById(a.getId())) {
+                    logger.info("Activity type with id {} does not exist", a.getId());
+                    return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404),
+                            "No activity type with given id exists")).build();
+                }
+
+                Activity act = new Activity();
+                act.setStartDate(a.getStartDate() != null ? a.getStartDate() : LocalDateTime.now());
+                act.setEndDate(a.getEndDate() != null ? a.getEndDate() : LocalDateTime.now());
+                Activity created = activities.createActivity(act, a.getActivityTypeId());
+
+                ActivityDto dto = new ActivityDto();
+                dto.setActivityTypeId(created.getType().getId());
+                dto.setStartDate(created.getStartDate());
+                dto.setEndDate(created.getEndDate());
+                dto.setId(created.getId());
+                dto.setProperties(new HashSet<>());
 
                 return ResponseEntity.ok(dto);
             });

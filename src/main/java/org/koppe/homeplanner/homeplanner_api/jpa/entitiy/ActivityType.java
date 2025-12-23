@@ -38,4 +38,7 @@ public class ActivityType {
 
     @Column(name = "timeable", nullable = false)
     private Boolean timeable;
+
+    @OneToMany(mappedBy = "type", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private Set<Activity> activities;
 }
