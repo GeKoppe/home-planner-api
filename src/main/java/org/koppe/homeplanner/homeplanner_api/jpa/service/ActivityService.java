@@ -1,5 +1,6 @@
 package org.koppe.homeplanner.homeplanner_api.jpa.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
@@ -18,6 +19,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
+@SuppressWarnings("unused")
 public class ActivityService {
     /**
      * Logger
@@ -45,6 +47,19 @@ public class ActivityService {
     private ActivityPropertyTypeRespository propTypes;
 
     // #region Types
+
+    /**
+     * Returns all defined activity types
+     * 
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<ActivityType> findAllActivityTypes(boolean loadProperties) {
+        List<ActivityType> types = actTypes.findAll();
+        if (loadProperties)
+            types.forEach(t -> t.getProperties().size());
+        return types;
+    }
 
     /**
      * Returns true if an activity with given name already exists in the database

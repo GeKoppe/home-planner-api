@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
  */
 @Service
 @AllArgsConstructor
+@SuppressWarnings("unused")
 public class SessionService {
     private final Logger logger = LoggerFactory.getLogger(SessionService.class);
 
@@ -49,6 +50,10 @@ public class SessionService {
      */
     @Transactional
     public Session createSession(@NotNull Long userId) throws IllegalArgumentException {
+        if (userId == null) {
+            logger.debug("User id not given");
+            throw new IllegalArgumentException();
+        }
         Optional<User> u = users.findById(userId);
         if (u.isEmpty()) {
             logger.info("User with id {} does not exist", userId);
@@ -93,7 +98,11 @@ public class SessionService {
      * @param guid Guid of the session
      * @return Found session
      */
-    public Optional<Session> findById(String guid) {
+    public Optional<Session> findById(String guid) throws IllegalArgumentException {
+        if (guid == null || guid.isBlank()) {
+            logger.debug("No guid given");
+            throw new IllegalArgumentException();
+        }
         return sessions.findById(guid);
     }
 

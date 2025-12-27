@@ -2,12 +2,14 @@ package org.koppe.homeplanner.homeplanner_api.web.controller;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
 
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityPropertyType;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityType;
 import org.koppe.homeplanner.homeplanner_api.jpa.service.ActivityService;
+import org.koppe.homeplanner.homeplanner_api.utility.DtoFactory;
 import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityDto;
 import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityPropertyTypeDto;
 import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityTypeDto;
@@ -22,9 +24,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +38,7 @@ import lombok.AllArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/activity")
+@RequestMapping("/activities")
 @Tag(name = "Activity management", description = "Provides functionality for working with activities")
 @AllArgsConstructor
 public class ActivityController {
@@ -51,15 +55,15 @@ public class ActivityController {
     /**
      * Creates new activity type
      * 
-     * @param activityType
-     * @return
+     * @param activityType Activity type to create
+     * @return Created activity type
      */
-    @Operation(summary = "Activity type creation", description = "Creates a new activity type with the given parameters")
+    @Operation(summary = "Create activity types", description = "Creates a new activity type with the given parameters")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Created activity successfully", content = @Content(schema = @Schema(implementation = ActivityTypeDto.class))),
             @ApiResponse(responseCode = "400", description = "Parameters in body are missing", content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
-    @PostMapping(path = "/type", produces = "application/json")
+    @PostMapping(path = "/types", produces = "application/json")
     public Mono<ResponseEntity<ActivityTypeDto>> createActivityType(@RequestBody Mono<ActivityTypeDto> activityType) {
         return activityType.flatMap(t -> {
             return Mono.fromCallable(() -> {
@@ -79,23 +83,42 @@ public class ActivityController {
                 type.setTimeable(t.getTimable() != null ? t.getTimable() : false);
 
                 ActivityType created = activities.createActivityType(type);
-                ActivityTypeDto dto = new ActivityTypeDto();
-                dto.setId(created.getId());
-                dto.setName(created.getName());
-                dto.setTimable(created.getTimeable());
+                ActivityTypeDto dto = DtoFactory.createSingleActivityTypeDtoFromJpa(created, false);
                 return ResponseEntity.ok(dto);
             });
         });
     }
 
+    @Operation(summary = "Retrieve activity types", description = "Retrieves all existing activity types.", parameters = {
+            @Parameter(name = "props", required = false, description = "If set to true, all properties for the activity types will be returned as well") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "All activity types returned successfully", content = @Content(schema = @Schema(implementation = List.class)))
+    })
+    @GetMapping(path = "/types", produces = "application/json")
+    public Mono<ResponseEntity<List<ActivityTypeDto>>> getAllActivityTypes(
+            @RequestParam(name = "props") Optional<Boolean> props) {
+        return Mono.fromCallable(() -> {
+            List<ActivityType> types = activities.findAllActivityTypes(props.orElse(false));
+            List<ActivityTypeDto> dtos = DtoFactory.createActivityTypeDtosFromJpa(types, props.orElse(false));
+            return ResponseEntity.ok(dtos);
+        });
+    }
+
+    /**
+     * Returns the activitiy with given id
+     * 
+     * @param id Id of the activity to return
+     * @return Activity with given id
+     */
     @Operation(summary = "Gets activity type with given id", description = "Returns the activity associated with given id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved activity type", content = @Content(schema = @Schema(implementation = ActivityTypeDto.class))),
             @ApiResponse(responseCode = "400", description = "No activity id provided", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "404", description = "Activity with provided id does not exist", content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
-    @GetMapping(path = "/type/{id}", produces = "application/json")
-    public Mono<ResponseEntity<ActivityTypeDto>> getActivityTypeById(@PathVariable Long id) {
+    @GetMapping(path = "/types/{id}", produces = "application/json")
+    public Mono<ResponseEntity<ActivityTypeDto>> getActivityTypeById(@PathVariable Long id,
+            @RequestParam(required = false, name = "props") Optional<Boolean> props) {
         return Mono.fromCallable(() -> {
             if (id == null) {
                 return ResponseEntity
@@ -109,16 +132,7 @@ public class ActivityController {
                         "Activity type with given id does not exist")).build();
             }
 
-            ActivityTypeDto dto = new ActivityTypeDto();
-            dto.setId(type.getId());
-            dto.setName(type.getName());
-            dto.setTimable(type.getTimeable());
-            Set<ActivityPropertyTypeDto> props = new HashSet<>();
-
-            type.getProperties().forEach(
-                    p -> props.add(new ActivityPropertyTypeDto(p.getId(), p.getName(), p.getType(), type.getId())));
-
-            dto.setProperties(props);
+            ActivityTypeDto dto = DtoFactory.createSingleActivityTypeDtoFromJpa(type, props.orElse(false));
             return ResponseEntity.ok(dto);
         });
     }
@@ -128,8 +142,9 @@ public class ActivityController {
             @ApiResponse(responseCode = "200", description = "Successfully deleted activity type", content = @Content(schema = @Schema(implementation = ActivityTypeDto.class))),
             @ApiResponse(responseCode = "404", description = "Activity type with provided id not found", content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
-    @DeleteMapping(path = "/type/{id}", produces = "application/json")
-    public Mono<ResponseEntity<ActivityTypeDto>> deleteActivityType(@PathVariable Long id) {
+    @DeleteMapping(path = "/types/{id}", produces = "application/json")
+    public Mono<ResponseEntity<ActivityTypeDto>> deleteActivityType(@PathVariable Long id,
+            @RequestParam(required = false, name = "props") Optional<Boolean> props) {
         return Mono.fromCallable(() -> {
             if (id == null) {
                 return ResponseEntity
@@ -150,16 +165,7 @@ public class ActivityController {
                         .build();
             }
 
-            ActivityTypeDto dto = new ActivityTypeDto();
-            dto.setId(deleted.getId());
-            dto.setName(deleted.getName());
-            dto.setTimable(deleted.getTimeable());
-            Set<ActivityPropertyTypeDto> props = new HashSet<>();
-
-            deleted.getProperties().forEach(
-                    p -> props.add(new ActivityPropertyTypeDto(p.getId(), p.getName(), p.getType(), deleted.getId())));
-
-            dto.setProperties(props);
+            ActivityTypeDto dto = DtoFactory.createSingleActivityTypeDtoFromJpa(deleted, props.orElse(false));
             return ResponseEntity.ok(dto);
         });
     }
@@ -173,7 +179,7 @@ public class ActivityController {
             @ApiResponse(responseCode = "400", description = "Returned, if no valid property definition is given", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "404", description = "Returned, if no activity type with given id exists", content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
-    @PostMapping(path = "/type/{activityTypeId}/property")
+    @PostMapping(path = "/types/{activityTypeId}/properties")
     public Mono<ResponseEntity<ActivityPropertyTypeDto>> createActivityTypeProperty(
             @RequestBody Mono<ActivityPropertyTypeDto> propertyType, @PathVariable Long activityTypeId) {
         return propertyType.flatMap(t -> {

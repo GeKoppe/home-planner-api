@@ -34,7 +34,11 @@ public class UserService {
      * @param id Id to be queried
      * @return Optional containing that user or null
      */
-    public Optional<User> findUserByid(Long id) {
+    public Optional<User> findUserByid(Long id) throws IllegalArgumentException {
+        if (id == null) {
+            logger.debug("No id given");
+            throw new IllegalArgumentException();
+        }
         return users.findById(id);
     }
 
