@@ -1,0 +1,1 @@
+[![CI Pipeline](https://github.com/GeKoppe/home-planner-api/actions/workflows/ci.yml/badge.svg)](https://github.com/GeKoppe/home-planner-api/actions/workflows/ci.yml)

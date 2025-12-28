@@ -17,6 +17,7 @@ import org.koppe.homeplanner.homeplanner_api.jpa.repository.UserRepository;
 import org.koppe.homeplanner.homeplanner_api.web.dto.UserDto;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -106,5 +107,28 @@ public class UserServiceTest {
 
         dto.setPassword("   ");
         assertThrows(IllegalArgumentException.class, () -> userService.passwordMatches(dto));
+    }
+
+    @Test
+    public void testUserExists() {
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(userRepository.existsById(2L)).thenReturn(false);
+
+        assertTrue(userService.userExists(1L));
+        assertFalse(userService.userExists(2L));
+        assertThrows(IllegalArgumentException.class, () -> userService.userExists(null));
+    }
+
+    @Test
+    public void testDeleteuser() {
+        User user = new User(1L, "Test", "");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        Mockito.doNothing().when(userRepository).delete(user);
+
+        assertThrows(IllegalArgumentException.class, () -> userService.deleteUser(null));
+        assertEquals(user, userService.deleteUser(1L));
+
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(IllegalArgumentException.class, () -> userService.deleteUser(1L));
     }
 }

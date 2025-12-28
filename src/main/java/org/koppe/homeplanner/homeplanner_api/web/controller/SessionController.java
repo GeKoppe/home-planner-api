@@ -23,12 +23,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/session")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Tag(name = "Session management", description = "Manages sessions within the application. Allows login and logout.")
 public class SessionController {
     /**
@@ -39,11 +39,11 @@ public class SessionController {
     /**
      * Db service for working with sessions in the database
      */
-    private SessionService sessions;
+    private final SessionService sessions;
     /**
      * DB Service for working with users in the database
      */
-    private UserService users;
+    private final UserService users;
 
     /**
      * Creates a session for given user information
