@@ -1,15 +1,8 @@
 package org.koppe.homeplanner.homeplanner_api.jpa.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-
-import org.koppe.homeplanner.homeplanner_api.config.CacheNames;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
-import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityPropertyType;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityType;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityPropertyRepository;
-import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityPropertyTypeRespository;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityRepository;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityTypeRepository;
 import org.slf4j.Logger;
@@ -21,13 +14,8 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-@SuppressWarnings("unused")
 public class ActivityService {
-    /**
-     * Logger
-     */
     private final Logger logger = LoggerFactory.getLogger(ActivityService.class);
-
     /**
      * Repository for working with activities
      */
@@ -38,180 +26,8 @@ public class ActivityService {
      */
     private ActivityPropertyRepository properties;
 
-    /**
-     * Activity types
-     */
-    private ActivityTypeRepository actTypes;
+    private final ActivityConfigService config;
 
-    /**
-     * Activity property types
-     */
-    private ActivityPropertyTypeRespository propTypes;
-
-    // #region Types
-
-    /**
-     * Returns a list of all activity types
-     * 
-     * @param loadProperties If set to true, the activity type properties will be
-     *                       loaded into the entitiies. If false, the type
-     *                       properties will be set to an empty HashSet
-     * @return List of all activity types
-     */
-    @Transactional(readOnly = true)
-    public List<ActivityType> findAllActivityTypes(boolean loadProperties) {
-        List<ActivityType> types = actTypes.findAll();
-        if (loadProperties)
-            types.forEach(t -> t.getProperties().size());
-        else
-            types.forEach(t -> t.setProperties(new HashSet<>()));
-        return types;
-    }
-
-    /**
-     * Checks if an {@link ActivityType} entity with the given name exists
-     * 
-     * @param activityName Name of the ActivityType to be checked
-     * @return True, if an activity with given name exists
-     * @throws IllegalArgumentException If no name is given
-     */
-    public boolean activityTypeExistsByName(String activityName) throws IllegalArgumentException {
-        if (activityName == null || activityName.isBlank()) {
-            logger.info("No activity name given");
-            throw new IllegalArgumentException();
-        }
-        return actTypes.findAllByName(activityName).size() > 0;
-    }
-
-    /**
-     * Creates a new ActivityType with the given name. Calls
-     * {@link ActivityService#createActivityType(ActivityType)}
-     * 
-     * @param name Name of the activity to be created
-     * @return The newly created activity type
-     * @throws IllegalArgumentException If no name is given
-     */
-    public ActivityType createActivityType(String name) throws IllegalArgumentException {
-        if (name == null || name.isBlank()) {
-            logger.info("No activity name given");
-            throw new IllegalArgumentException();
-        }
-
-        ActivityType type = new ActivityType();
-        type.setName(name);
-
-        return createActivityType(type);
-    }
-
-    /**
-     * Saves the new activity type in the database
-     * 
-     * @param type Type to be saved
-     * @return The newly created activity type
-     * @throws IllegalArgumentException If no name is given or an activity type with
-     *                                  the name already exists
-     */
-    @Transactional
-    public ActivityType createActivityType(ActivityType type) throws IllegalArgumentException {
-        if (type == null || type.getName() == null || type.getName().isBlank()) {
-            logger.info("No activity name given");
-            throw new IllegalArgumentException();
-        }
-
-        if (activityTypeExistsByName(type.getName())) {
-            logger.info("Activity type with name {} already exists", type.getName());
-            throw new IllegalArgumentException();
-        }
-
-        return actTypes.save(type);
-    }
-
-    @Transactional
-    public ActivityType findActivityTypeById(Long id) throws IllegalArgumentException {
-        if (id == null) {
-            logger.info("No activity id given");
-            throw new IllegalArgumentException();
-        }
-        Optional<ActivityType> typeOpt = actTypes.findById(id);
-        if (typeOpt.isEmpty())
-            return null;
-        ActivityType type = typeOpt.get();
-        type.getProperties().size();
-        return type;
-    }
-
-    @Transactional
-    public ActivityType deleteActivityType(Long id) throws IllegalArgumentException {
-        if (id == null) {
-            logger.info("No activity id given");
-            throw new IllegalArgumentException();
-        }
-
-        Optional<ActivityType> typeOpt = actTypes.findById(id);
-        if (typeOpt.isEmpty())
-            return null;
-
-        ActivityType type = typeOpt.get();
-        type.getProperties().size();
-        actTypes.delete(type);
-        return type;
-    }
-
-    public boolean activityExistsById(Long id) {
-        if (id == null) {
-            logger.info("No activity type id given");
-            throw new IllegalArgumentException();
-        }
-
-        return actTypes.existsById(id);
-    }
-
-    // #region Type Properties
-    public boolean activityTypePropertyExistsByNameAndActivityTypeId(String name, Long activityId)
-            throws IllegalArgumentException {
-        if (name == null || name.isBlank() || activityId == null || activityId < 0) {
-            logger.info("No activity property name given");
-            throw new IllegalArgumentException();
-        }
-
-        return propTypes.findAllByNameAndActivity_Id(name, activityId).size() > 0;
-    }
-
-    @Transactional
-    public ActivityPropertyType createActivityPropertyType(ActivityPropertyType prop) throws IllegalArgumentException {
-        if (prop == null) {
-            throw new IllegalArgumentException();
-        }
-        return propTypes.save(prop);
-    }
-
-    /**
-     * Updates an activity type in the database
-     * 
-     * @param type Type to be updated
-     * @return The updated type
-     * @throws IllegalArgumentException If type is null or type.id is missing or
-     *                                  invalid
-     */
-    @Transactional
-    public ActivityType updateActivityType(ActivityType type) throws IllegalArgumentException {
-        if (type == null) {
-            logger.info("No activity type given");
-            throw new IllegalArgumentException();
-        }
-
-        if (type.getId() == null || type.getId() < 0 || !activityExistsById(type.getId())) {
-            logger.info("Invalid activity type id given");
-            throw new IllegalArgumentException();
-        }
-
-        ActivityType t = actTypes.findById(type.getId()).get();
-        t.setName(type.getName());
-        t.setTimeable(type.getTimeable());
-        return actTypes.save(t);
-    }
-
-    // #region Activities
     @Transactional
     public Activity createActivity(Activity act, Long typeId) {
         if (act == null || typeId == null) {
@@ -219,7 +35,7 @@ public class ActivityService {
             throw new IllegalArgumentException();
         }
 
-        ActivityType type = findActivityTypeById(typeId);
+        ActivityType type = config.findActivityTypeById(typeId);
         if (type == null) {
             logger.info("No valid activity id given");
             throw new IllegalArgumentException();
