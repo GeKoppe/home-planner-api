@@ -4,7 +4,6 @@ import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityType;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityPropertyRepository;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityRepository;
-import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

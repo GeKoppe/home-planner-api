@@ -22,13 +22,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(path = "/activities")
 @Tag(name = "Activity management", description = "Provides functionality to work with activities")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ActivityController {
     /**
      * Logger
