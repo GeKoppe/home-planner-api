@@ -9,6 +9,8 @@ import org.koppe.homeplanner.homeplanner_api.security.PasswordEncryption;
 import org.koppe.homeplanner.homeplanner_api.web.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +30,15 @@ public class UserService {
      */
     private UserRepository users;
 
+    private final String userCache = "users";
+
     /**
      * Queries database for the user with given id
      * 
      * @param id Id to be queried
      * @return Optional containing that user or null
      */
+    @Cacheable(value = userCache, key = "#id")
     public Optional<User> findUserByid(Long id) throws IllegalArgumentException {
         if (id == null) {
             logger.debug("No id given");
@@ -96,6 +101,7 @@ public class UserService {
     }
 
     @Transactional
+    @CacheEvict(value = userCache, key = "#id")
     public User deleteUser(Long id) throws IllegalArgumentException {
         if (id == null) {
             logger.info("No id given");

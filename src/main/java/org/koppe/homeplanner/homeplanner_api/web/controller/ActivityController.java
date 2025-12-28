@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -167,6 +168,49 @@ public class ActivityController {
 
             ActivityTypeDto dto = DtoFactory.createSingleActivityTypeDtoFromJpa(deleted, props.orElse(false));
             return ResponseEntity.ok(dto);
+        });
+    }
+
+    @Operation(summary = "Updates an activity", description = "Updates the activity with given id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated activity type", content = @Content(schema = @Schema(implementation = ActivityTypeDto.class))),
+            @ApiResponse(responseCode = "400", description = "Id or name not correctly given", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+            @ApiResponse(responseCode = "404", description = "Activity type with given id does not exist", content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
+    @PutMapping(path = "/types/{id}")
+    public Mono<ResponseEntity<ActivityTypeDto>> updateActivityType(@RequestBody Mono<ActivityTypeDto> activity,
+            @PathVariable(name = "id") Long activityId) {
+
+        return activity.flatMap(a -> {
+            return Mono.fromCallable(() -> {
+                if (!activities.activityExistsById(activityId)) {
+                    logger.warn("No activity with id {} exists", activityId);
+                    return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404),
+                            "No activity with given id exists")).build();
+                }
+
+                if (a.getId() != null && !a.getId().equals(activityId)) {
+                    logger.warn("Trying to update activity with id {} on resource with id {}", a.getId(), activityId);
+                    return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400),
+                            "Resource id and id in body don't match")).build();
+                }
+
+                if (a.getName() == null || a.getName().isBlank()) {
+                    logger.warn("Cannot update an activity with blank name");
+                    return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400),
+                            "Cannot update activity with blank name")).build();
+                }
+
+                ActivityType type = new ActivityType();
+                type.setId(activityId);
+                type.setName(a.getName());
+                type.setTimeable(a.getTimable() != null ? a.getTimable() : false);
+
+                ActivityType t = activities.updateActivityType(type);
+                ActivityTypeDto dto = DtoFactory.createSingleActivityTypeDtoFromJpa(t, false);
+
+                return ResponseEntity.ok(dto);
+            });
         });
     }
 
