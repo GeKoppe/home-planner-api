@@ -91,7 +91,6 @@ public class UserServiceTest {
 
         User u = new User(1L, "Test", encoder.encode("elo"));
         when(userRepository.findByName("Test")).thenReturn(List.of(u));
-        when(userRepository.findByName(null)).thenReturn(new ArrayList<>());
 
         assertTrue(userService.passwordMatches(dto));
         assertThrows(IllegalArgumentException.class, () -> userService.passwordMatches(null));
