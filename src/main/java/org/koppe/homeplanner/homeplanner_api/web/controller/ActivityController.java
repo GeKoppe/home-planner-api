@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
-import org.koppe.homeplanner.homeplanner_api.jpa.service.ActivityConfigService;
 import org.koppe.homeplanner.homeplanner_api.jpa.service.ActivityService;
 import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityDto;
 import org.slf4j.Logger;
@@ -22,11 +21,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(path = "/activities")
+@Tag(name = "Activity management", description = "Provides functionality to work with activities")
 @AllArgsConstructor
 public class ActivityController {
     /**
