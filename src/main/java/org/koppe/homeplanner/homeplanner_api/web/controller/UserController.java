@@ -10,6 +10,7 @@ import org.koppe.homeplanner.homeplanner_api.web.dto.UserResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,13 +27,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 /**
  * Controller for user management
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
 @Tag(name = "User Management", description = "Provides functionality for managing users within the application")
@@ -85,7 +86,6 @@ public class UserController {
     public Mono<ResponseEntity<UserResponseDto>> addUser(@RequestBody Mono<UserDto> user) {
         return user.flatMap((u) -> {
             return Mono.fromCallable(() -> {
-
                 if (userService.findByName(u.getName()).size() > 0) {
                     return ResponseEntity.of(
                             ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), "Username already exists"))
@@ -109,7 +109,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "User deleted successfully", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "User with given id not found", content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
-    @DeleteMapping(path = "/{id}", produces = "applicaion/json")
+    @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<UserResponseDto>> deleteUser(@PathVariable Long id) {
         return Mono.fromCallable(() -> {
             if (!userService.userExists(id)) {

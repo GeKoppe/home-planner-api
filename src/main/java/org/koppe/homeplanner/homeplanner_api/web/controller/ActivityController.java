@@ -22,13 +22,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(path = "/activities")
 @Tag(name = "Activity management", description = "Provides functionality to work with activities")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ActivityController {
     /**
      * Logger
@@ -47,6 +47,7 @@ public class ActivityController {
     })
     @PostMapping(produces = "application/json")
     public Mono<ResponseEntity<ActivityDto>> addActivity(@RequestBody Mono<ActivityDto> activity) {
+        // activity = activity.timeout(Duration.ofSeconds(30));
         return activity.flatMap(a -> {
             return Mono.fromCallable(() -> {
                 if (a.getActivityTypeId() == null) {
@@ -62,6 +63,7 @@ public class ActivityController {
                 Activity created = null;
                 try {
                     created = activities.createActivity(act, a.getActivityTypeId());
+                    logger.debug("Created new activity");
                 } catch (IllegalArgumentException ex) {
                     logger.info("No valid activity type given");
                     return ResponseEntity
