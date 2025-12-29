@@ -21,7 +21,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "null"})
 public class ActivityConfigService {
     /**
      * Logger

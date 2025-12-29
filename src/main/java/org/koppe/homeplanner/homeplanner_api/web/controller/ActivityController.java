@@ -1,6 +1,5 @@
 package org.koppe.homeplanner.homeplanner_api.web.controller;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 

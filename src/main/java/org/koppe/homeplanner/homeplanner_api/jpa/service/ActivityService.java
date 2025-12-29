@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
+@SuppressWarnings({"unused", "null"})
 public class ActivityService {
     private final Logger logger = LoggerFactory.getLogger(ActivityService.class);
     /**
