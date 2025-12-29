@@ -31,13 +31,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/activity-config")
 @Tag(name = "Activity configuration management", description = "Provides functionality for configuring activity types")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ActivityConfigController {
     /**
      * Logger
@@ -117,11 +117,11 @@ public class ActivityConfigController {
     public Mono<ResponseEntity<ActivityTypeDto>> getActivityTypeById(@PathVariable Long id,
             @RequestParam(required = false, name = "props") Optional<Boolean> props) {
         return Mono.fromCallable(() -> {
-            if (id == null) {
-                return ResponseEntity
-                        .of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), "No activity id given"))
-                        .build();
-            }
+            // if (id == null) {
+            //     return ResponseEntity
+            //             .of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), "No activity id given"))
+            //             .build();
+            // }
 
             ActivityType type = activities.findActivityTypeById(id);
             if (type == null) {
@@ -143,11 +143,11 @@ public class ActivityConfigController {
     public Mono<ResponseEntity<ActivityTypeDto>> deleteActivityType(@PathVariable Long id,
             @RequestParam(required = false, name = "props") Optional<Boolean> props) {
         return Mono.fromCallable(() -> {
-            if (id == null) {
-                return ResponseEntity
-                        .of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), "No activity id given"))
-                        .build();
-            }
+            // if (id == null) {
+            //     return ResponseEntity
+            //             .of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), "No activity id given"))
+            //             .build();
+            // }
 
             ActivityType type = activities.findActivityTypeById(id);
             if (type == null) {
@@ -179,6 +179,11 @@ public class ActivityConfigController {
 
         return activity.flatMap(a -> {
             return Mono.fromCallable(() -> {
+                // if (activityId == null) {
+                //     logger.warn("No activity with id given", activityId);
+                //     return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400),
+                //             "No activity id given")).build();
+                // }
                 if (!activities.activityExistsById(activityId)) {
                     logger.warn("No activity with id {} exists", activityId);
                     return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404),
@@ -224,6 +229,20 @@ public class ActivityConfigController {
             @RequestBody Mono<ActivityPropertyTypeDto> propertyType, @PathVariable Long activityTypeId) {
         return propertyType.flatMap(t -> {
             return Mono.fromCallable(() -> {
+                // if (activityTypeId == null) {
+                //     return ResponseEntity
+                //             .of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400), "No activity type id given"))
+                //             .build();
+                // }
+
+                // Check if the activity id exists
+                ActivityType act = activities.findActivityTypeById(activityTypeId);
+                if (act == null) {
+                    logger.info("No activity type with id {} found", activityTypeId);
+                    return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404),
+                            "No activity with given id exists")).build();
+                }
+
                 // Check if all necessary properties are given
                 if (t == null || t.getName() == null || t.getName().isBlank() || t.getType() == null) {
                     logger.info("No activity property to create given");
@@ -239,14 +258,6 @@ public class ActivityConfigController {
                             .of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(400),
                                     "Property with given name for given activity already exists"))
                             .build();
-                }
-
-                // Check if the activity id exists
-                ActivityType act = activities.findActivityTypeById(activityTypeId);
-                if (act == null) {
-                    logger.info("No activity type with id {} found", activityTypeId);
-                    return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404),
-                            "No activity with given id exists")).build();
                 }
                 logger.debug("Creating new property for activity {}", act);
 

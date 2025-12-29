@@ -16,6 +16,12 @@ java {
 	}
 }
 
+tasks.withType(JavaCompile).configureEach {
+    javaCompiler = javaToolchains.compilerFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor

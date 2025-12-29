@@ -1,5 +1,6 @@
 package org.koppe.homeplanner.homeplanner_api.web.controller;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 
@@ -47,6 +48,7 @@ public class ActivityController {
     })
     @PostMapping(produces = "application/json")
     public Mono<ResponseEntity<ActivityDto>> addActivity(@RequestBody Mono<ActivityDto> activity) {
+        // activity = activity.timeout(Duration.ofSeconds(30));
         return activity.flatMap(a -> {
             return Mono.fromCallable(() -> {
                 if (a.getActivityTypeId() == null) {
@@ -62,6 +64,7 @@ public class ActivityController {
                 Activity created = null;
                 try {
                     created = activities.createActivity(act, a.getActivityTypeId());
+                    logger.debug("Created new activity");
                 } catch (IllegalArgumentException ex) {
                     logger.info("No valid activity type given");
                     return ResponseEntity

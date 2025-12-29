@@ -22,9 +22,7 @@ public class ActivityDto {
     private Long id;
     @Include
     private Long activityTypeId;
-    @Include
     private LocalDateTime startDate;
-    @Include
     private LocalDateTime endDate;
     private Set<ActivityPropertyDto> properties;
 }

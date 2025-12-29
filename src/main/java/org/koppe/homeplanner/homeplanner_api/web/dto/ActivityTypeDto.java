@@ -22,5 +22,6 @@ public class ActivityTypeDto {
     @Include
     private String name;
     private Set<ActivityPropertyTypeDto> properties;
+    @Include
     private Boolean timable;
 }
