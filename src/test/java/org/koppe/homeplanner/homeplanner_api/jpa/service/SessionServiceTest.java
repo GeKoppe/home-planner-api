@@ -24,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings({ "null" })
-public class SessionRepositoryTest {
+public class SessionServiceTest {
     @Mock
     private SessionRepository repo;
 
