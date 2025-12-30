@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ public class SessionServiceTest {
 
     @BeforeEach
     public void setup() {
-        u1 = new User(1L, "Test", "");
+        u1 = new User(1L, "Test", "", Set.of());
         s1 = new Session("random-uuid", u1, LocalDateTime.now().plusMinutes(10L));
     }
 
