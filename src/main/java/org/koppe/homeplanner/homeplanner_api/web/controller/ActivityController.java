@@ -2,21 +2,29 @@ package org.koppe.homeplanner.homeplanner_api.web.controller;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
 import org.koppe.homeplanner.homeplanner_api.jpa.service.ActivityService;
+import org.koppe.homeplanner.homeplanner_api.utility.DtoFactory;
 import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,6 +47,33 @@ public class ActivityController {
      */
     private final ActivityService activities;
 
+    @Operation(summary = "Get all activities", description = "Returns all activities. If from and to are specified, only activities in that time period will be returned", parameters = {
+            @Parameter(name = "from", required = false, description = "Oldest activity to be returned"),
+            @Parameter(name = "to", required = false, description = "Youngest activity to be returned"),
+            @Parameter(name = "top", required = false, description = "Only the given number of elements will be returned"),
+            @Parameter(name = "props", required = false, description = "If true, all properties of the activities will be returned as well")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully queried the activities")
+    })
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<List<ActivityDto>>> getAllActivities(
+            @RequestParam(name = "from", required = false) Optional<LocalDateTime> from,
+            @RequestParam(name = "to", required = false) Optional<LocalDateTime> to,
+            @RequestParam(name = "top", required = false) Optional<Long> top,
+            @RequestParam(name = "props", required = false) Optional<Boolean> props) {
+        return Mono.fromCallable(() -> {
+            
+            return ResponseEntity.ok(null);
+        });
+    }
+
+    /**
+     * Used to create a single activity
+     * 
+     * @param activity Activity to create
+     * @return Created activity
+     */
     @Operation(summary = "Creates an activity", description = "Creates a new activity with the given type")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully created the activity", content = @Content(schema = @Schema(implementation = ActivityDto.class))),
@@ -81,6 +116,29 @@ public class ActivityController {
 
                 return ResponseEntity.ok(dto);
             });
+        });
+    }
+
+    @Operation(summary = "Get single activity", description = "Returns a single activity with the given id", parameters = {
+            @Parameter(name = "props", required = false, description = "If set to true, all activity properties will be returned as well. If false, only the activity with an empty properties block will be returned.") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully queried the activity", content = @Content(schema = @Schema(implementation = ActivityDto.class))),
+            @ApiResponse(responseCode = "404", description = "No activity with given id was found", content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<ActivityDto>> getActivity(@PathVariable(name = "id", required = true) Long id,
+            @RequestParam(name = "props", required = false) Optional<Boolean> props) {
+        return Mono.fromCallable(() -> {
+            Activity a = activities.findById(id, props.orElse(false));
+            if (a == null) {
+                logger.info("No activity with id {} exists", id);
+                return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404),
+                        "No activity with given id exists")).build();
+            }
+
+            ActivityDto dto = DtoFactory.createSingleActivityDtoFromJpa(a, props.orElse(false), a.getType().getId());
+
+            return ResponseEntity.ok(dto);
         });
     }
 }

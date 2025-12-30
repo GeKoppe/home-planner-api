@@ -1,11 +1,18 @@
 package org.koppe.homeplanner.homeplanner_api.jpa.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityType;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityPropertyRepository;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +20,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-@SuppressWarnings({"unused", "null"})
+@SuppressWarnings({ "unused", "null" })
 public class ActivityService {
     private final Logger logger = LoggerFactory.getLogger(ActivityService.class);
     /**
@@ -45,5 +52,33 @@ public class ActivityService {
         Activity created = activities.save(act);
         created.getType().getId();
         return created;
+    }
+
+    @Transactional(readOnly = true)
+    public Activity findById(Long id, boolean withProps) {
+        Optional<Activity> a = activities.findById(id);
+        if (a.isEmpty()) {
+            logger.info("No activity with given id exists");
+            return null;
+        }
+
+        Activity act = a.get();
+
+        if (withProps) {
+            act.getProperties().size();
+            act.getProperties().forEach(p -> {
+                p.getPropertyType().getId();
+            });
+        } else
+            act.setProperties(new HashSet<>());
+
+        act.getType().getId();
+        return act;
+    }
+
+    public List<Activity> findAll(Optional<LocalDateTime> from, Optional<LocalDateTime> to, Optional<Boolean> withProps,
+            Optional<Long> top) {
+        
+        return activities.findAll();
     }
 }

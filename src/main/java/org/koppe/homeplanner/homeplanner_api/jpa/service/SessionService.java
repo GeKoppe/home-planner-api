@@ -66,6 +66,10 @@ public class SessionService {
 
     @Transactional
     public Session createSession(@NotNull String userName) throws IllegalArgumentException {
+        if (userName == null || userName.isBlank()) {
+            logger.info("Empty username, cannot create session");
+            throw new IllegalArgumentException();
+        }
         List<User> u = users.findByName(userName);
         if (u.size() == 0) {
             logger.info("No user for name {} exists", userName);
