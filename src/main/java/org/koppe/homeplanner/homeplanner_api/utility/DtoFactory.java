@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
+import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityProperty;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityPropertyType;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityType;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.User;
 import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityDto;
+import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityPropertyDto;
 import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityPropertyTypeDto;
 import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityTypeDto;
 import org.koppe.homeplanner.homeplanner_api.web.dto.UserResponseDto;
@@ -71,10 +73,16 @@ public abstract class DtoFactory {
      * 
      * @param p JPA entities to convert
      * @return Set of all converted jpa entities
+     * @throws IllegalArgumentException When p or activityTypeId are null
      */
     public static final Set<ActivityPropertyTypeDto> createActivityPropertyTypeDtosFromJpa(
-            Set<ActivityPropertyType> p, Long activityTypeId) {
+            Set<ActivityPropertyType> p, Long activityTypeId) throws IllegalArgumentException {
+        if (p == null || activityTypeId == null) {
+            logger.warn("Given arguments are null");
+            throw new IllegalArgumentException();
+        }
         logger.debug("Creating dtos from {} ActivityPropertyType JPA entities", p.size());
+
         Set<ActivityPropertyTypeDto> props = new HashSet<>();
 
         p.forEach(prop -> {
@@ -90,6 +98,17 @@ public abstract class DtoFactory {
         return props;
     }
 
+    /**
+     * Creates activity dtos from a list of activities
+     * 
+     * @param act            Activities to be converted to dtos
+     * @param withProperties If true, properties will be loaded into the dtos. The
+     *                       properties in the activities MUST be loaded beforehand
+     *                       by the jpa.
+     * @param activityTypeId Id of the activity type the activities belong to
+     * @return List of all activity dtos
+     * @throws IllegalArgumentException If the list of activities is empty
+     */
     public static final List<ActivityDto> createActivityDtosFromJpa(List<Activity> act, boolean withProperties,
             Long activityTypeId)
             throws IllegalArgumentException {
@@ -109,7 +128,7 @@ public abstract class DtoFactory {
             dto.setEndDate(a.getEndDate());
 
             if (withProperties) {
-
+                dto.setProperties(createActivityPropertyDtosFromJpa(a.getProperties(), a.getId()));
             } else
                 dto.setProperties(new HashSet<>());
 
@@ -133,6 +152,24 @@ public abstract class DtoFactory {
         return createActivityDtosFromJpa(List.of(act), withProperties, activityTypeId).get(0);
     }
 
+    // #region Activity Properties
+    public static final Set<ActivityPropertyDto> createActivityPropertyDtosFromJpa(Set<ActivityProperty> props,
+            Long activityId) {
+        Set<ActivityPropertyDto> dtos = new HashSet<>();
+        props.forEach(p -> {
+            ActivityPropertyDto dto = new ActivityPropertyDto();
+            dto.setId(p.getId());
+            dto.setPropertyTypeId(p.getPropertyType().getId());
+            dto.setActivityId(activityId);
+            dto.setType(p.getPropertyType().getType());
+            dto.setValue(p.getValue());
+
+            dtos.add(dto);
+        });
+        return dtos;
+    }
+
+    // #region Users
     public static final List<UserResponseDto> createUserResponseDtosFromJpas(List<User> u) {
         logger.debug("Creating dtos from {} User JPA entities", u.size());
         List<UserResponseDto> dtos = new ArrayList<>();
