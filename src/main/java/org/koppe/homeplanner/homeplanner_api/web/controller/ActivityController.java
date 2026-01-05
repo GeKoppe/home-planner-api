@@ -271,7 +271,7 @@ public class ActivityController {
         });
     }
 
-    //#region Delete property
+    // #region Delete property
     @DeleteMapping("/{activityId}/properties/{propertyId}")
     public Mono<ResponseEntity<ActivityPropertyDto>> deleteProperty(
             @PathVariable(name = "activityId", required = true) Long activityId,
