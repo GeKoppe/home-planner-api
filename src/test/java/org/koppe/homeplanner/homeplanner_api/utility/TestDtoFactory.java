@@ -42,8 +42,8 @@ public class TestDtoFactory {
 
     @Test
     public void testCreateUserResponseDtos() {
-        User u1 = new User(1L, "Test1", "");
-        User u2 = new User(2L, "Test2", "");
+        User u1 = new User(1L, "Test1", "", Set.of());
+        User u2 = new User(2L, "Test2", "", Set.of());
 
         List<UserResponseDto> dtos = DtoFactory.createUserResponseDtosFromJpas(List.of(u1, u2));
         assertEquals(2, dtos.size());

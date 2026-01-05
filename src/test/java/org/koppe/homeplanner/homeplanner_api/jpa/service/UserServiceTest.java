@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,10 +32,10 @@ public class UserServiceTest {
 
     @Test
     public void testFindUserById() {
-        User user = new User(1L, "Test", "");
+        User user = new User(1L, "Test", "", Set.of());
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         assertThrows(IllegalArgumentException.class, () -> userService.findUserByid(null));
-        
+
         Optional<User> found = userService.findUserByid(1L);
         assertTrue(found.isPresent());
         assertEquals("Test", found.get().getName());
@@ -46,20 +47,20 @@ public class UserServiceTest {
     @Test
     public void testCreateUser() {
         // Test that no blank values are permitted in any combination
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser("", "test") );
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser("  ", "test") );
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser("test", "") );
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser("test", "   ") );
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser("", "") );
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser("    ", "") );
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser("", "     ") );
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser("    ", "    ") );
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("", "test"));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("  ", "test"));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("test", ""));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("test", "   "));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("", ""));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("    ", ""));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("", "     "));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("    ", "    "));
 
         User user = new User();
         user.setName("Test");
         user.setPwHash(new BCryptPasswordEncoder(12).encode("test"));
 
-        User userReturn = new User(2L, "Test", new BCryptPasswordEncoder(12).encode("test"));
+        User userReturn = new User(2L, "Test", new BCryptPasswordEncoder(12).encode("test"), Set.of());
         when(userRepository.save(user)).thenReturn(userReturn);
 
         User created = userService.createUser("Test", "test");
@@ -69,7 +70,7 @@ public class UserServiceTest {
 
     @Test
     public void testFindByName() {
-        User found = new User(1L, "Test", "");
+        User found = new User(1L, "Test", "", Set.of());
         when(userRepository.findByName("Test")).thenReturn(List.of(found));
         when(userRepository.findByName(null)).thenReturn(new ArrayList<>());
 
@@ -90,7 +91,7 @@ public class UserServiceTest {
         dto.setName("Test");
         dto.setPassword("elo");
 
-        User u = new User(1L, "Test", encoder.encode("elo"));
+        User u = new User(1L, "Test", encoder.encode("elo"), Set.of());
         when(userRepository.findByName("Test")).thenReturn(List.of(u));
 
         assertTrue(userService.passwordMatches(dto));
@@ -121,7 +122,7 @@ public class UserServiceTest {
 
     @Test
     public void testDeleteuser() {
-        User user = new User(1L, "Test", "");
+        User user = new User(1L, "Test", "", Set.of());
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         Mockito.doNothing().when(userRepository).delete(user);
 

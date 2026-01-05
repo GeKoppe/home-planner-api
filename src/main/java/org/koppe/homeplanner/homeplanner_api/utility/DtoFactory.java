@@ -126,6 +126,7 @@ public abstract class DtoFactory {
             dto.setId(a.getId());
             dto.setStartDate(a.getStartDate());
             dto.setEndDate(a.getEndDate());
+            dto.setInfo(a.getInfo() == null ? "" : a.getInfo());
 
             if (withProperties) {
                 dto.setProperties(createActivityPropertyDtosFromJpa(a.getProperties(), a.getId()));
@@ -167,6 +168,11 @@ public abstract class DtoFactory {
             dtos.add(dto);
         });
         return dtos;
+    }
+
+    public static final ActivityPropertyDto createSingleActivityPropertyDtoFromJpa(ActivityProperty prop,
+            Long activityId) {
+        return createActivityPropertyDtosFromJpa(Set.of(prop), activityId).toArray(ActivityPropertyDto[]::new)[0];
     }
 
     // #region Users

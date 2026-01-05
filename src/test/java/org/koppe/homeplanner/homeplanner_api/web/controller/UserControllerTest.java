@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ public class UserControllerTest {
 
     @Test
     public void getSingleUser() {
-        User u = new User(1L, "Test", "");
+        User u = new User(1L, "Test", "", Set.of());
         when(srv.findUserByid(Long.valueOf(1))).thenReturn(Optional.of(u));
 
         UserResponseDto dto = new UserResponseDto("Test", 1L);
@@ -56,8 +57,8 @@ public class UserControllerTest {
     @SuppressWarnings("null")
     @Test
     public void testAddUser() {
-        User u1 = new User(1L, "Test", "");
-        User u2 = new User(2L, "Test2", "");
+        User u1 = new User(1L, "Test", "", Set.of());
+        User u2 = new User(2L, "Test2", "", Set.of());
 
         when(srv.findByName("Test")).thenReturn(List.of(u1));
         when(srv.findByName("Test2")).thenReturn(new ArrayList<>());
@@ -81,7 +82,7 @@ public class UserControllerTest {
 
     @Test
     public void testDeleteUser() {
-        User u1 = new User(1L, "Test", "");
+        User u1 = new User(1L, "Test", "", Set.of());
         when(srv.userExists(1L)).thenReturn(true);
         when(srv.userExists(2L)).thenReturn(false);
 

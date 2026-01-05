@@ -1,18 +1,12 @@
 package org.koppe.homeplanner.homeplanner_api.jpa.entitiy;
 
-import java.time.LocalDateTime;
-import java.util.Set;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,15 +17,14 @@ import lombok.ToString;
 import lombok.EqualsAndHashCode.Include;
 
 @Entity
-@Table(name = "activities")
+@Table(name = "user_settings")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Activity {
-
+public class UserSetting {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,20 +32,14 @@ public class Activity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "activity_type_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @Include
-    private ActivityType type;
+    private User user;
 
-    @Column(name = "start_date", nullable = false)
-    private LocalDateTime startDate;
-
-    @Column(name = "end_date", nullable = false)
-    private LocalDateTime endDate;
-
-    @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private Set<ActivityProperty> properties;
-
-    @Column(name = "info", nullable = true)
+    @Column(name = "setting_name", nullable = false)
     @Include
-    private String info;
+    private String settingName;
+
+    @Column(name = "setting_value", nullable = false)
+    private String settingValue;
 }
