@@ -76,9 +76,41 @@ public class ActivityService {
         return act;
     }
 
+    /**
+     * TODO implement correctly and with specification
+     * 
+     * @param from
+     * @param to
+     * @param withProps
+     * @param top
+     * @return
+     */
     public List<Activity> findAll(Optional<LocalDateTime> from, Optional<LocalDateTime> to, Optional<Boolean> withProps,
             Optional<Long> top) {
-        
         return activities.findAll();
+    }
+
+    public boolean activityExistsById(Long id) throws IllegalArgumentException {
+        if (id == null) {
+            logger.info("No id given");
+            throw new IllegalArgumentException();
+        }
+        return activities.existsById(id);
+    }
+
+    @Transactional
+    public Activity deleteById(Long id) throws IllegalArgumentException {
+        if (!activityExistsById(id)) {
+            logger.info("No activity with id {} exists", id);
+            throw new IllegalArgumentException();
+        }
+
+        Optional<Activity> actOp = activities.findById(id);
+        Activity act = actOp.get();
+        act.getProperties().size();
+        act.getType().getId();
+
+        activities.delete(act);
+        return act;
     }
 }
