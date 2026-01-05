@@ -24,6 +24,7 @@ import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityType;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.PropertyTypeC;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityPropertyRepository;
 import org.koppe.homeplanner.homeplanner_api.jpa.repository.ActivityRepository;
+import org.koppe.homeplanner.homeplanner_api.web.dto.ActivityDto;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -53,6 +54,8 @@ public class ActivityServiceTest {
     private ActivityProperty p1;
     private ActivityProperty p2;
 
+    private ActivityDto dto1;
+
     @BeforeEach
     public void setup() {
         t1 = new ActivityType(1L, "T1", Set.of(), true, Set.of());
@@ -61,8 +64,8 @@ public class ActivityServiceTest {
         pt1 = new ActivityPropertyType(1L, "PT1", t1, PropertyTypeC.STRING, Set.of());
         pt2 = new ActivityPropertyType(2L, "PT2", t2, PropertyTypeC.STRING, Set.of());
 
-        a1 = new Activity(1L, t1, LocalDateTime.now(), LocalDateTime.now(), Set.of());
-        a2 = new Activity(2L, t1, LocalDateTime.now(), LocalDateTime.now(), Set.of());
+        a1 = new Activity(1L, t1, LocalDateTime.now(), LocalDateTime.now(), Set.of(), "");
+        a2 = new Activity(2L, t1, LocalDateTime.now(), LocalDateTime.now(), Set.of(), "");
 
         p1 = new ActivityProperty(1L, a1, pt1, "Test1");
         p2 = new ActivityProperty(2L, a2, pt2, "Test2");
@@ -72,6 +75,8 @@ public class ActivityServiceTest {
 
         a1.setProperties(Set.of(p1));
         a2.setProperties(Set.of(p2));
+
+        dto1 = new ActivityDto(1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), Set.of(), "Test");
     }
 
     @Test
@@ -132,5 +137,25 @@ public class ActivityServiceTest {
 
         Activity a = srv.deleteById(1L);
         assertEquals(a1, a);
+    }
+
+    @Test
+    public void testUpdateActivity() {
+        // Test non null assertions
+        assertThrows(IllegalArgumentException.class, () -> srv.updateActivity(null));
+        dto1.setId(null);
+        assertThrows(IllegalArgumentException.class, () -> srv.updateActivity(dto1));
+
+        when(repo.findById(5L)).thenReturn(Optional.empty());
+        dto1.setId(5L);
+        assertThrows(IllegalArgumentException.class, () -> srv.updateActivity(dto1));
+
+        when(repo.findById(1L)).thenReturn(Optional.of(a1));
+        dto1.setId(1L);
+        Activity a = srv.updateActivity(dto1);
+        assertEquals(dto1.getInfo(), a.getInfo());
+        assertEquals(dto1.getEndDate(), a.getEndDate());
+        assertEquals(dto1.getStartDate(), a.getStartDate());
+        assertEquals(dto1.getId(), a.getId());
     }
 }

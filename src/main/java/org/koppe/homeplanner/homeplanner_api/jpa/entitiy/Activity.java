@@ -51,4 +51,8 @@ public class Activity {
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
     private Set<ActivityProperty> properties;
+
+    @Column(name = "info", nullable = true)
+    @Include
+    private String info;
 }
