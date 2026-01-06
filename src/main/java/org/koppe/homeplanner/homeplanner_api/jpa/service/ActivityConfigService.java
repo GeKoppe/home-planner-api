@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.koppe.homeplanner.homeplanner_api.config.CacheNames;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityPropertyType;
@@ -17,11 +18,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-@SuppressWarnings({"unused", "null"})
+@SuppressWarnings({ "unused", "null" })
 public class ActivityConfigService {
     /**
      * Logger
@@ -116,22 +118,42 @@ public class ActivityConfigService {
         return actTypes.save(type);
     }
 
+    /**
+     * Finds activity type with the given id in the database
+     * 
+     * @param id Id of the activity type to be returned
+     * @return The found activity type or null, if no type with given id exists
+     * @throws IllegalArgumentException If id is null
+     */
     @Transactional
-    public ActivityType findActivityTypeById(Long id) throws IllegalArgumentException {
+    public @Nullable ActivityType findActivityTypeById(@NotNull Long id) throws IllegalArgumentException {
+        // Check, if id is null
         if (id == null) {
             logger.info("No activity id given");
             throw new IllegalArgumentException();
         }
+
+        // Retrieve the activity type
         Optional<ActivityType> typeOpt = actTypes.findById(id);
         if (typeOpt.isEmpty())
             return null;
+
+        // Load activity type and properties
         ActivityType type = typeOpt.get();
         type.getProperties().size();
         return type;
     }
 
+    /**
+     * Deletes activity type with given id from the database
+     * 
+     * @param id Id of the activity type to be deleted
+     * @return The deleted activity type or null, if no activity type with given id
+     *         exists
+     * @throws IllegalArgumentException If id is null
+     */
     @Transactional
-    public ActivityType deleteActivityType(Long id) throws IllegalArgumentException {
+    public @Nullable ActivityType deleteActivityType(Long id) throws IllegalArgumentException {
         if (id == null) {
             logger.info("No activity id given");
             throw new IllegalArgumentException();
@@ -147,7 +169,14 @@ public class ActivityConfigService {
         return type;
     }
 
-    public boolean activityExistsById(Long id) {
+    /**
+     * Checks, if an activity type with the given id exists
+     * 
+     * @param id Id of the activity type to be checked
+     * @return True, if such an activity type exists, false otherwise
+     * @throws IllegalArgumentException if id is null
+     */
+    public boolean activityExistsById(Long id) throws IllegalArgumentException {
         if (id == null) {
             logger.info("No activity type id given");
             throw new IllegalArgumentException();
@@ -157,6 +186,16 @@ public class ActivityConfigService {
     }
 
     // #region Type Properties
+    /**
+     * Checks, if an ActivityPropertyType with the given name for the given activity
+     * id exists
+     * 
+     * @param name       Name of the activity property type
+     * @param activityId ID of the activity type
+     * @return True, if such a property type exists, false otherwise
+     * @throws IllegalArgumentException If name is null or blank or activityId is
+     *                                  null
+     */
     public boolean activityTypePropertyExistsByNameAndActivityTypeId(String name, Long activityId)
             throws IllegalArgumentException {
         if (name == null || name.isBlank() || activityId == null || activityId < 0) {
@@ -167,6 +206,13 @@ public class ActivityConfigService {
         return propTypes.findAllByNameAndActivity_Id(name, activityId).size() > 0;
     }
 
+    /**
+     * Creates an activity property type in the database
+     * 
+     * @param prop Type to be created
+     * @return The created type
+     * @throws IllegalArgumentException If prop is null
+     */
     @Transactional
     public ActivityPropertyType createActivityPropertyType(ActivityPropertyType prop) throws IllegalArgumentException {
         if (prop == null) {

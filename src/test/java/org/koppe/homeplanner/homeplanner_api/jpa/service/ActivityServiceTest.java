@@ -67,8 +67,8 @@ public class ActivityServiceTest {
         a1 = new Activity(1L, t1, LocalDateTime.now(), LocalDateTime.now(), Set.of(), "");
         a2 = new Activity(2L, t1, LocalDateTime.now(), LocalDateTime.now(), Set.of(), "");
 
-        p1 = new ActivityProperty(1L, a1, pt1, "Test1");
-        p2 = new ActivityProperty(2L, a2, pt2, "Test2");
+        p1 = new ActivityProperty(1L, a1, pt1, "Test1", "");
+        p2 = new ActivityProperty(2L, a2, pt2, "Test2", "");
 
         t1.setProperties(Set.of(pt1));
         t2.setProperties(Set.of(pt2));
