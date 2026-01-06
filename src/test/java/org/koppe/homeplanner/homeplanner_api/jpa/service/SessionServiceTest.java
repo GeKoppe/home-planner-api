@@ -66,6 +66,7 @@ public class SessionServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> srv.createSession((String) null));
         assertThrows(IllegalArgumentException.class, () -> srv.createSession("Test2"));
+        assertThrows(IllegalArgumentException.class, () -> srv.createSession("    "));
 
         Session session = srv.createSession("Test");
         assertEquals("random-uuid", session.getGuid());
@@ -86,5 +87,16 @@ public class SessionServiceTest {
         Session sess = s.get();
         assertEquals("random-uuid", sess.getGuid());
         assertEquals(1L, sess.getUser().getId());
+    }
+
+    @Test
+    public void testRefreshSession() {
+        Session s = new Session(s1.getGuid(), s1.getUser(), s1.getExpiration().plusMinutes(10L));
+        when(repo.save(s1)).thenReturn(s);
+
+        Session refreshed = srv.refreshSession(s1);
+        assertEquals(s1.getGuid(), refreshed.getGuid());
+        assertEquals(s1.getUser(), refreshed.getUser());
+        assertEquals(s.getExpiration(), refreshed.getExpiration());
     }
 }

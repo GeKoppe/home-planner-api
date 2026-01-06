@@ -2,6 +2,7 @@ package org.koppe.homeplanner.homeplanner_api.jpa.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -145,7 +146,7 @@ public class ActivityConfigServiceTest {
 
         assertNull(srv.deleteActivityType(5L));
         doNothing().when(actTypes).delete(any(ActivityType.class));
-        
+
         assertEquals(a1, srv.deleteActivityType(1L));
     }
 
@@ -161,6 +162,55 @@ public class ActivityConfigServiceTest {
         assertFalse(srv.activityExistsById(5L));
     }
 
-    
+    @Test
+    public void testUpdateActivity() {
+        // Test argument checking
+        assertThrows(IllegalArgumentException.class, () -> srv.updateActivityType(null));
 
+        a1.setId(null);
+        assertThrows(IllegalArgumentException.class, () -> srv.updateActivityType(a1));
+
+        a1.setId(-1L);
+        assertThrows(IllegalArgumentException.class, () -> srv.updateActivityType(a1));
+
+        when(actTypes.existsById(1L)).thenReturn(true);
+        when(actTypes.existsById(5L)).thenReturn(false);
+
+        a1.setId(5L);
+        assertThrows(IllegalArgumentException.class, () -> srv.updateActivityType(a1));
+
+        when(actTypes.findById(1L)).thenReturn(Optional.of(a1));
+        when(actTypes.save(any(ActivityType.class))).thenReturn(a1);
+
+        a1.setId(1L);
+        assertNotNull(srv.updateActivityType(a1));
+    }
+
+    @Test
+    public void testActivityPropertyTypeExistsByNameAndActivityId() {
+        assertThrows(IllegalArgumentException.class,
+                () -> srv.activityTypePropertyExistsByNameAndActivityTypeId(null, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> srv.activityTypePropertyExistsByNameAndActivityTypeId("", null));
+        assertThrows(IllegalArgumentException.class,
+                () -> srv.activityTypePropertyExistsByNameAndActivityTypeId("     ", null));
+        assertThrows(IllegalArgumentException.class,
+                () -> srv.activityTypePropertyExistsByNameAndActivityTypeId("Test", null));
+        assertThrows(IllegalArgumentException.class,
+                () -> srv.activityTypePropertyExistsByNameAndActivityTypeId("Test", -5L));
+
+        when(actProps.findAllByNameAndActivity_Id("Test", 1L)).thenReturn(List.of(p1));
+        assertTrue(srv.activityTypePropertyExistsByNameAndActivityTypeId("Test", 1L));
+
+        when(actProps.findAllByNameAndActivity_Id("Test", 2L)).thenReturn(List.of());
+        assertFalse(srv.activityTypePropertyExistsByNameAndActivityTypeId("Test", 2L));
+    }
+
+    @Test
+    public void testCreateActivityPropertyType() {
+        assertThrows(IllegalArgumentException.class, () -> srv.createActivityPropertyType(null));
+        
+        when(actProps.save(any(ActivityPropertyType.class))).thenReturn(p1);
+        assertNotNull(srv.createActivityPropertyType(p1));
+    }
 }

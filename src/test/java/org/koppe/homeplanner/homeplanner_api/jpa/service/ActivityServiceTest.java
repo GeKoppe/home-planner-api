@@ -11,6 +11,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -157,5 +158,12 @@ public class ActivityServiceTest {
         assertEquals(dto1.getEndDate(), a.getEndDate());
         assertEquals(dto1.getStartDate(), a.getStartDate());
         assertEquals(dto1.getId(), a.getId());
+    }
+
+    @Test
+    public void testFindAll() {
+        when(repo.findAll()).thenReturn(List.of(a1, a2));
+
+        assertEquals(2, srv.findAll(null, null, null, null).size());
     }
 }

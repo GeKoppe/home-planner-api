@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.koppe.homeplanner.homeplanner_api.config.CacheNames;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.Activity;
 import org.koppe.homeplanner.homeplanner_api.jpa.entitiy.ActivityPropertyType;
@@ -126,7 +125,7 @@ public class ActivityConfigService {
      * @throws IllegalArgumentException If id is null
      */
     @Transactional
-    public @Nullable ActivityType findActivityTypeById(@NotNull Long id) throws IllegalArgumentException {
+    public ActivityType findActivityTypeById(@NotNull Long id) throws IllegalArgumentException {
         // Check, if id is null
         if (id == null) {
             logger.info("No activity id given");
@@ -153,7 +152,7 @@ public class ActivityConfigService {
      * @throws IllegalArgumentException If id is null
      */
     @Transactional
-    public @Nullable ActivityType deleteActivityType(Long id) throws IllegalArgumentException {
+    public ActivityType deleteActivityType(Long id) throws IllegalArgumentException {
         if (id == null) {
             logger.info("No activity id given");
             throw new IllegalArgumentException();
