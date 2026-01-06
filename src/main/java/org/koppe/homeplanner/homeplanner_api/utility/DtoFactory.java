@@ -105,12 +105,10 @@ public abstract class DtoFactory {
      * @param withProperties If true, properties will be loaded into the dtos. The
      *                       properties in the activities MUST be loaded beforehand
      *                       by the jpa.
-     * @param activityTypeId Id of the activity type the activities belong to
      * @return List of all activity dtos
      * @throws IllegalArgumentException If the list of activities is empty
      */
-    public static final List<ActivityDto> createActivityDtosFromJpa(List<Activity> act, boolean withProperties,
-            Long activityTypeId)
+    public static final List<ActivityDto> createActivityDtosFromJpa(List<Activity> act, boolean withProperties)
             throws IllegalArgumentException {
 
         if (act == null) {
@@ -122,7 +120,7 @@ public abstract class DtoFactory {
         List<ActivityDto> dtos = new ArrayList<>();
         act.forEach(a -> {
             ActivityDto dto = new ActivityDto();
-            dto.setActivityTypeId(activityTypeId);
+            dto.setActivityTypeId(a.getId());
             dto.setId(a.getId());
             dto.setStartDate(a.getStartDate());
             dto.setEndDate(a.getEndDate());
@@ -148,9 +146,9 @@ public abstract class DtoFactory {
      * @param activityTypeId Id of the activity type
      * @return The converted dto
      */
-    public static final ActivityDto createSingleActivityDtoFromJpa(Activity act, boolean withProperties,
-            Long activityTypeId) throws IllegalArgumentException {
-        return createActivityDtosFromJpa(List.of(act), withProperties, activityTypeId).get(0);
+    public static final ActivityDto createSingleActivityDtoFromJpa(Activity act, boolean withProperties)
+            throws IllegalArgumentException {
+        return createActivityDtosFromJpa(List.of(act), withProperties).get(0);
     }
 
     // #region Activity Properties

@@ -67,8 +67,9 @@ public class ActivityController {
             @RequestParam(name = "top", required = false) Optional<Long> top,
             @RequestParam(name = "props", required = false) Optional<Boolean> props) {
         return Mono.fromCallable(() -> {
-
-            return ResponseEntity.ok(null);
+            List<Activity> acts = activities.findAll(from, to, props, top);
+            List<ActivityDto> dtos = DtoFactory.createActivityDtosFromJpa(acts, props.orElse(false));
+            return ResponseEntity.ok(dtos);
         });
     }
 
@@ -112,7 +113,7 @@ public class ActivityController {
                             .build();
                 }
 
-                ActivityDto dto = DtoFactory.createSingleActivityDtoFromJpa(created, false, created.getId());
+                ActivityDto dto = DtoFactory.createSingleActivityDtoFromJpa(created, false);
 
                 return ResponseEntity.ok(dto);
             });
@@ -137,7 +138,7 @@ public class ActivityController {
                         "No activity with given id exists")).build();
             }
 
-            ActivityDto dto = DtoFactory.createSingleActivityDtoFromJpa(a, props.orElse(false), a.getType().getId());
+            ActivityDto dto = DtoFactory.createSingleActivityDtoFromJpa(a, props.orElse(false));
             return ResponseEntity.ok(dto);
         });
     }
@@ -160,7 +161,7 @@ public class ActivityController {
             }
 
             Activity act = activities.deleteById(id);
-            return ResponseEntity.ok(DtoFactory.createSingleActivityDtoFromJpa(act, true, act.getType().getId()));
+            return ResponseEntity.ok(DtoFactory.createSingleActivityDtoFromJpa(act, true));
         });
     }
 
@@ -192,7 +193,7 @@ public class ActivityController {
                 Activity a = activities.updateActivity(act);
                 logger.info("Updated activity: {}", a);
 
-                ActivityDto newDto = DtoFactory.createSingleActivityDtoFromJpa(a, true, id);
+                ActivityDto newDto = DtoFactory.createSingleActivityDtoFromJpa(a, true);
 
                 return ResponseEntity.ok(newDto);
             });

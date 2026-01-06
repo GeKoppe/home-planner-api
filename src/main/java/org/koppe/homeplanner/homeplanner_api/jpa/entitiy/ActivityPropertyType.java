@@ -19,6 +19,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Represents an Activity Property Type. Those are definitions for actual
+ * Activity Properties
+ */
 @Entity
 @Table(name = "activity_property_types")
 @Getter
@@ -27,21 +31,36 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class ActivityPropertyType {
+    /**
+     * ID
+     */
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Name
+     */
     @Column(name = "name")
     private String name;
 
+    /**
+     * Type of the activity this property type was created for
+     */
     @ManyToOne
     @JoinColumn(name = "activity_type_id", nullable = false)
     private ActivityType activity;
 
+    /**
+     * Type of the property (e.g. string)
+     */
     @Column(name = "type", nullable = false)
     private PropertyTypeC type;
 
+    /**
+     * Activity properties that were created with this property type as template
+     */
     @OneToMany(mappedBy = "propertyType", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<ActivityProperty> activityProperties;
 }

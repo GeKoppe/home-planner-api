@@ -11,6 +11,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -67,8 +68,8 @@ public class ActivityServiceTest {
         a1 = new Activity(1L, t1, LocalDateTime.now(), LocalDateTime.now(), Set.of(), "");
         a2 = new Activity(2L, t1, LocalDateTime.now(), LocalDateTime.now(), Set.of(), "");
 
-        p1 = new ActivityProperty(1L, a1, pt1, "Test1");
-        p2 = new ActivityProperty(2L, a2, pt2, "Test2");
+        p1 = new ActivityProperty(1L, a1, pt1, "Test1", "");
+        p2 = new ActivityProperty(2L, a2, pt2, "Test2", "");
 
         t1.setProperties(Set.of(pt1));
         t2.setProperties(Set.of(pt2));
@@ -157,5 +158,12 @@ public class ActivityServiceTest {
         assertEquals(dto1.getEndDate(), a.getEndDate());
         assertEquals(dto1.getStartDate(), a.getStartDate());
         assertEquals(dto1.getId(), a.getId());
+    }
+
+    @Test
+    public void testFindAll() {
+        when(repo.findAll()).thenReturn(List.of(a1, a2));
+
+        assertEquals(2, srv.findAll(null, null, null, null).size());
     }
 }
